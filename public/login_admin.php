@@ -53,7 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php if ($error): ?>
       <div class="badge red" style="margin-bottom: 16px; width: 100%; justify-content: center; padding: 8px;">
-        <?php echo htmlspecialchars($error); ?></div>
+        <?php echo htmlspecialchars($error); ?>
+      </div>
     <?php endif; ?>
 
     <form method="post">
@@ -62,19 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <label>Senha</label>
       <input class="input" type="password" name="password" placeholder="Senha" required>
-      <div style="text-align:right; margin-top:8px; font-size:0.875rem;">
-        <a href="esqueci_senha.php" style="color: var(--text-light);">Esqueci minha senha</a>
-      </div>
 
       <button class="btn" type="submit" style="width: 100%; margin-top: 24px;">Entrar</button>
     </form>
-
-    <div style="margin-top: 24px; text-align: center;">
-      <a href="login.php"
-        style="display: inline-flex; align-items: center; gap: 8px; color: var(--text-light); font-size: 0.875rem;">
-        <i class="ri-arrow-left-line"></i> Voltar ao login de clientes
-      </a>
-    </div>
 
   </div>
 
