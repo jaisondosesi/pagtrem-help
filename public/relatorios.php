@@ -8,7 +8,7 @@ require_once('../assets/config/db.php');
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Relatórios - Vai de Trem</title>
+  <title>Relatórios - PagTrem</title>
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
   <link href="../assets/css/styles.css" rel="stylesheet">
 </head>

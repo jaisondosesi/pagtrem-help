@@ -64,7 +64,7 @@ if ($currentAvatar && strpos($currentAvatar, 'assets/') === 0) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Meu Perfil - Vai de Trem</title>
+  <title>Meu Perfil - PagTrem</title>
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
   <link href="../assets/css/styles.css" rel="stylesheet">
 

@@ -4,32 +4,32 @@ require_once('../assets/config/db.php');
 
 // PROCESSAR FORMULÁRIO DE AVISOS
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
-    $id = $_POST['id'] ?? '';
-    $title = trim($_POST['title'] ?? '');
-    $body = trim($_POST['body'] ?? '');
-    $tag = $_POST['tag'] ?? 'Sistema';
+  $action = $_POST['action'] ?? '';
+  $id = $_POST['id'] ?? '';
+  $title = trim($_POST['title'] ?? '');
+  $body = trim($_POST['body'] ?? '');
+  $tag = $_POST['tag'] ?? 'Sistema';
 
-    if ($action === 'update' && $id) {
-        $stmt = $mysqli->prepare("UPDATE notices SET title=?, body=?, tag=? WHERE id=?");
-        $stmt->bind_param('sssi', $title, $body, $tag, $id);
-        $stmt->execute();
-    } elseif ($action === 'delete' && $id) {
-        $stmt = $mysqli->prepare("DELETE FROM notices WHERE id=?");
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-    }
+  if ($action === 'update' && $id) {
+    $stmt = $mysqli->prepare("UPDATE notices SET title=?, body=?, tag=? WHERE id=?");
+    $stmt->bind_param('sssi', $title, $body, $tag, $id);
+    $stmt->execute();
+  } elseif ($action === 'delete' && $id) {
+    $stmt = $mysqli->prepare("DELETE FROM notices WHERE id=?");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+  }
 
-    header('Location: dashboard.php');
-    exit;
+  header('Location: dashboard.php');
+  exit;
 }
 
 // DELETE VIA GET (Opcional, mas mantendo padrão)
 if (isset($_GET['delete_notice'])) {
-    $id = (int)$_GET['delete_notice'];
-    $mysqli->query("DELETE FROM notices WHERE id=$id");
-    header('Location: dashboard.php');
-    exit;
+  $id = (int) $_GET['delete_notice'];
+  $mysqli->query("DELETE FROM notices WHERE id=$id");
+  header('Location: dashboard.php');
+  exit;
 }
 ?>
 <!DOCTYPE html>
@@ -38,7 +38,7 @@ if (isset($_GET['delete_notice'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard - Vai de Trem</title>
+  <title>Dashboard - PagTrem</title>
 
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
   <link href="../assets/css/styles.css" rel="stylesheet">
@@ -135,7 +135,7 @@ if (isset($_GET['delete_notice'])) {
     </div>
 
     <div class="recent-item">
-      <img src="../assets/images/notificacao_icone.png" alt="Câmera" class="icon-img" style="width:24px;height:24px;">
+      <i class="ri-notification-3-line" style="font-size:24px; color:var(--brand); margin-right:8px;"></i>
       08:52 — Câmera #7 voltou ao status Online
     </div>
 
@@ -172,7 +172,8 @@ if (isset($_GET['delete_notice'])) {
         </div>
 
         <div style="margin-top:10px; text-align:center;">
-          <a href="#" id="deleteNoticeLink" class="btn" style="background:#fee2e2; color:#991b1b; border-color:#fca5a5; display:block;">Excluir Aviso</a>
+          <a href="#" id="deleteNoticeLink" class="btn"
+            style="background:#fee2e2; color:#991b1b; border-color:#fca5a5; display:block;">Excluir Aviso</a>
         </div>
       </form>
     </div>
@@ -193,7 +194,7 @@ if (isset($_GET['delete_notice'])) {
       noticeBody.value = data.body;
 
       deleteNoticeLink.href = "?delete_notice=" + data.id;
-      deleteNoticeLink.onclick = function(e) {
+      deleteNoticeLink.onclick = function (e) {
         if (!confirm('Tem certeza que deseja excluir este aviso?')) {
           e.preventDefault();
         }
@@ -206,7 +207,7 @@ if (isset($_GET['delete_notice'])) {
       noticeModal.style.display = "none";
     }
 
-    window.addEventListener("click", function(e) {
+    window.addEventListener("click", function (e) {
       if (e.target === noticeModal) {
         closeNoticeModal();
       }

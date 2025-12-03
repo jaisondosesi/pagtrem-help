@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login - Vai de Trem</title>
+  <title>Login - PagTrem</title>
 
   <link href="../assets/css/styles.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="brand-icon"><img src="../assets/images/trem_icone.png" alt="Trem" class="icon-img"
         style="width:52px;height:52px;"></div>
 
-    <h2>Vai de Trem</h2>
+    <h2>PagTrem</h2>
     <div class="sub">Acesso ao sistema</div>
 
     <?php if ($error): ?>
@@ -95,9 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <label style="margin-top:12px">Senha</label>
       <input class="input" type="password" name="password" placeholder="Sua senha" required>
-    <div style="text-align:right;margin-top:6px;font-size:13px;">
-      <a href="esqueci_senha.php">Esqueci minha senha</a>
-    </div>
+      <div style="text-align:right;margin-top:6px;font-size:13px;">
+        <a href="esqueci_senha.php">Esqueci minha senha</a>
+      </div>
 
       <button class="btn-login" type="submit">Entrar</button>
 

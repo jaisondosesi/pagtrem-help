@@ -7,7 +7,7 @@ $user = $_SESSION['user'] ?? null;
 
 <head>
   <meta charset="utf-8">
-  <title>Área do Cliente - Vai de Trem</title>
+  <title>Área do Cliente - PagTrem</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="../assets/css/styles.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">

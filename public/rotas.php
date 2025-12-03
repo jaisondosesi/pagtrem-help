@@ -69,7 +69,7 @@ if (isset($_GET['delete'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Rotas - Vai de Trem</title>
+    <title>Rotas - PagTrem</title>
 
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
     <link href="../assets/css/styles.css" rel="stylesheet">
@@ -107,7 +107,7 @@ if (isset($_GET['delete'])) {
                 </div>
 
                 <div class='live-info'>
-                    <img src='../assets/images/notificacao_icone.png' class='icon-img' style='width:16px;height:16px;'> " . (!empty($r['extra_info']) ? htmlspecialchars($r['extra_info']) : 'Sem informações adicionais') . "
+                    <i class='ri-notification-3-line' style='font-size:16px; color:var(--muted); margin-right:4px; vertical-align:middle;'></i> " . (!empty($r['extra_info']) ? htmlspecialchars($r['extra_info']) : 'Sem informações adicionais') . "
                 </div>
             </div>";
         }

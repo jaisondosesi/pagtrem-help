@@ -8,7 +8,7 @@ $feedback = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     $id = $_POST['id'] ?? '';
-    
+
     $name = trim($_POST['name'] ?? '');
     $role = trim($_POST['role'] ?? '');
     $cep = trim($_POST['cep'] ?? '');
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $neighborhood = trim($_POST['neighborhood'] ?? '');
     $city = trim($_POST['city'] ?? '');
     $uf = trim($_POST['uf'] ?? '');
-    
+
     // Apenas para criação
     $email = trim($_POST['email'] ?? '');
     $password = trim($_POST['password'] ?? '');
@@ -24,17 +24,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // FOTO
     $photo = null;
-    
+
     // 1. Verifica se veio upload
     if (!empty($_FILES['photo']['name'])) {
         if ($_FILES['photo']['error'] === UPLOAD_ERR_OK) {
             $ext = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-            
+
             if (in_array($ext, $allowed)) {
                 $fname = 'f_' . time() . '_' . rand(1000, 9999) . '.' . $ext;
                 $dest = '../assets/uploads/funcionarios/' . $fname;
-                
+
                 // Garantir que a pasta existe
                 $dir = dirname($dest);
                 if (!is_dir($dir)) {
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $feedback = "Erro no upload: Código " . $_FILES['photo']['error'];
         }
-    } 
+    }
     // 2. Verifica se selecionou da galeria (se não houve upload)
     elseif (!empty($_POST['selected_photo'])) {
         $photo = $_POST['selected_photo'];
@@ -66,13 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // 1. Inserir Funcionário
             $stmt = $mysqli->prepare("INSERT INTO employees (name, role, cep, street, neighborhood, city, uf, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->bind_param('ssssssss', $name, $role, $cep, $street, $neighborhood, $city, $uf, $photo);
-            
+
             if ($stmt->execute()) {
                 // 2. Criar Usuário de Acesso (Obrigatório)
                 $hash = password_hash($password, PASSWORD_DEFAULT);
                 $stmt2 = $mysqli->prepare("INSERT INTO users (name, email, password, role, avatar, job_title) VALUES (?, ?, ?, ?, ?, ?)");
                 $stmt2->bind_param('ssssss', $name, $email, $hash, $access_level, $photo, $role);
-                
+
                 if ($stmt2->execute()) {
                     $feedback = "Funcionário e usuário de acesso cadastrados com sucesso!";
                 } else {
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $feedback = "Erro ao cadastrar funcionário.";
             }
         }
-        
+
     } elseif ($action === 'update' && $id) {
         // Construir query dinâmica para update
         $sql = "UPDATE employees SET name=?, role=?, cep=?, street=?, neighborhood=?, city=?, uf=?";
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param($types, ...$params);
-        
+
         if ($stmt->execute()) {
             $feedback = "Funcionário atualizado com sucesso!";
         } else {
@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // DELETE VIA GET
 if (isset($_GET['delete'])) {
-    $id = (int)$_GET['delete'];
+    $id = (int) $_GET['delete'];
     $mysqli->query("DELETE FROM employees WHERE id=$id");
     header('Location: funcionarios.php');
     exit;
@@ -131,7 +131,7 @@ if (isset($_GET['delete'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Funcionários - Vai de Trem</title>
+    <title>Funcionários - PagTrem</title>
 
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
     <link href="../assets/css/styles.css" rel="stylesheet">
@@ -143,6 +143,7 @@ if (isset($_GET['delete'])) {
             gap: 10px;
             margin-top: 10px;
         }
+
         .gallery-item {
             cursor: pointer;
             border: 2px solid transparent;
@@ -150,13 +151,16 @@ if (isset($_GET['delete'])) {
             padding: 2px;
             transition: all 0.2s;
         }
+
         .gallery-item:hover {
             transform: scale(1.1);
         }
+
         .gallery-item.selected {
             border-color: var(--brand);
             transform: scale(1.1);
         }
+
         .gallery-item img {
             width: 100%;
             height: auto;
@@ -195,13 +199,14 @@ if (isset($_GET['delete'])) {
 
     <!-- HEADER -->
     <div class="top-header">
-        <h1><img src="../assets/images/icones_funcionarios.png" alt="Funcionários" class="icon-img" style="width:22px;height:22px;">
+        <h1><img src="../assets/images/icones_funcionarios.png" alt="Funcionários" class="icon-img"
+                style="width:22px;height:22px;">
             Funcionários</h1>
     </div>
 
     <!-- LISTA DE FUNCIONÁRIOS -->
     <div class="container" style="padding-bottom: 80px;">
-        
+
         <?php if ($feedback): ?>
             <div class="success-box"><?php echo $feedback; ?></div>
         <?php endif; ?>
@@ -214,7 +219,7 @@ if (isset($_GET['delete'])) {
                 // 1. Se começar com "assets/", é caminho relativo direto (galeria)
                 // 2. Se não, assume que está em uploads/funcionarios/
                 // 3. Fallback
-                
+            
                 $photoVal = $f['photo'];
                 if ($photoVal && strpos($photoVal, 'assets/') === 0) {
                     $photoPath = '../' . $photoVal; // Ajuste pois estamos em public/
@@ -223,7 +228,7 @@ if (isset($_GET['delete'])) {
                 } else {
                     $photoPath = '../assets/uploads/profile_photos/avatar-default.png';
                 }
-                
+
                 // Dados para JS
                 $jsonData = htmlspecialchars(json_encode($f), ENT_QUOTES, 'UTF-8');
 
@@ -262,26 +267,33 @@ if (isset($_GET['delete'])) {
 
                 <!-- Foto -->
                 <div style="text-align:center; margin-bottom:15px;">
-                    <img id="preview" src="../assets/uploads/profile_photos/avatar-default.png" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:1px solid #ddd; margin-bottom:10px;">
+                    <img id="preview" src="../assets/uploads/profile_photos/avatar-default.png"
+                        style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:1px solid #ddd; margin-bottom:10px;">
                     <br>
-                    
+
                     <!-- Opções de Foto -->
                     <div style="margin-bottom:10px;">
-                        <span style="font-size:13px; color:var(--muted); display:block; margin-bottom:5px;">Escolha um avatar:</span>
+                        <span style="font-size:13px; color:var(--muted); display:block; margin-bottom:5px;">Escolha um
+                            avatar:</span>
                         <div class="gallery-grid">
-                            <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario1.png', this)">
+                            <div class="gallery-item"
+                                onclick="selectGalleryPhoto('assets/images/funcionario1.png', this)">
                                 <img src="../assets/images/funcionario1.png">
                             </div>
-                            <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario2.png', this)">
+                            <div class="gallery-item"
+                                onclick="selectGalleryPhoto('assets/images/funcionario2.png', this)">
                                 <img src="../assets/images/funcionario2.png">
                             </div>
-                            <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario3.png', this)">
+                            <div class="gallery-item"
+                                onclick="selectGalleryPhoto('assets/images/funcionario3.png', this)">
                                 <img src="../assets/images/funcionario3.png">
                             </div>
-                            <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario4.png', this)">
+                            <div class="gallery-item"
+                                onclick="selectGalleryPhoto('assets/images/funcionario4.png', this)">
                                 <img src="../assets/images/funcionario4.png">
                             </div>
-                            <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario5.png', this)">
+                            <div class="gallery-item"
+                                onclick="selectGalleryPhoto('assets/images/funcionario5.png', this)">
                                 <img src="../assets/images/funcionario5.png">
                             </div>
                         </div>
@@ -289,8 +301,11 @@ if (isset($_GET['delete'])) {
 
                     <div style="font-size:12px; color:var(--muted); margin:10px 0;">OU</div>
 
-                    <label for="photoInput" class="btn secondary" style="display:inline-block; width:auto; padding:5px 10px; font-size:12px;">Upload do Computador</label>
-                    <input type="file" name="photo" id="photoInput" accept="image/*" style="display:none;" onchange="handleFileUpload(this)">
+                    <label for="photoInput" class="btn secondary"
+                        style="display:inline-block; width:auto; padding:5px 10px; font-size:12px;">Upload do
+                        Computador</label>
+                    <input type="file" name="photo" id="photoInput" accept="image/*" style="display:none;"
+                        onchange="handleFileUpload(this)">
                 </div>
 
                 <label>Nome Completo</label>
@@ -302,8 +317,9 @@ if (isset($_GET['delete'])) {
                 <!-- Campos de Login (Obrigatório para criação) -->
                 <div id="loginFields">
                     <hr style="margin:15px 0; border:0; border-top:1px solid #eee;">
-                    <p style="font-size:13px; font-weight:600; margin-bottom:10px; color:var(--brand);">Dados de Acesso (Obrigatório)</p>
-                    
+                    <p style="font-size:13px; font-weight:600; margin-bottom:10px; color:var(--brand);">Dados de Acesso
+                        (Obrigatório)</p>
+
                     <label>Nível de Acesso</label>
                     <select class="input" name="access_level" id="empAccessLevel">
                         <option value="user">Usuário Comum</option>
@@ -317,14 +333,15 @@ if (isset($_GET['delete'])) {
                 </div>
 
                 <hr style="margin:15px 0; border:0; border-top:1px solid #eee;">
-                
+
                 <!-- Endereço -->
                 <div style="display:flex; gap:10px; align-items:flex-end;">
                     <div style="flex:1;">
                         <label>CEP</label>
                         <input class="input" name="cep" id="empCep" onblur="buscarCEP()">
                     </div>
-                    <button type="button" class="btn" onclick="buscarCEP()" style="width:auto; margin-bottom:2px;"><i class="ri-search-line"></i></button>
+                    <button type="button" class="btn" onclick="buscarCEP()" style="width:auto; margin-bottom:2px;"><i
+                            class="ri-search-line"></i></button>
                 </div>
 
                 <div style="display:flex; gap:10px; margin-top:10px;">
@@ -352,9 +369,10 @@ if (isset($_GET['delete'])) {
                     <button type="button" class="btn secondary" onclick="closeModal()">Cancelar</button>
                     <button type="submit" class="btn">Salvar</button>
                 </div>
-                
+
                 <div id="deleteBtnContainer" style="margin-top:10px; text-align:center; display:none;">
-                    <a href="#" id="deleteLink" class="btn" style="background:#fee2e2; color:#991b1b; border-color:#fca5a5;">Excluir Funcionário</a>
+                    <a href="#" id="deleteLink" class="btn"
+                        style="background:#fee2e2; color:#991b1b; border-color:#fca5a5;">Excluir Funcionário</a>
                 </div>
             </form>
         </div>
@@ -368,7 +386,7 @@ if (isset($_GET['delete'])) {
         const empName = document.getElementById("empName");
         const empRole = document.getElementById("empRole");
         const loginFields = document.getElementById("loginFields");
-        
+
         const empCep = document.getElementById("empCep");
         const empCity = document.getElementById("empCity");
         const empUf = document.getElementById("empUf");
@@ -377,7 +395,7 @@ if (isset($_GET['delete'])) {
         const preview = document.getElementById("preview");
         const selectedPhotoInput = document.getElementById("selectedPhoto");
         const photoInput = document.getElementById("photoInput");
-        
+
         const deleteBtnContainer = document.getElementById("deleteBtnContainer");
         const deleteLink = document.getElementById("deleteLink");
 
@@ -388,7 +406,7 @@ if (isset($_GET['delete'])) {
             selectedPhotoInput.value = path;
             // Limpa input file
             photoInput.value = "";
-            
+
             // Visual selection
             document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
             element.classList.add('selected');
@@ -409,25 +427,25 @@ if (isset($_GET['delete'])) {
             empId.value = "";
             empName.value = "";
             empRole.value = "";
-            
+
             // Limpar endereço
             empCep.value = "";
             empCity.value = "";
             empUf.value = "";
             empStreet.value = "";
             empNeighborhood.value = "";
-            
+
             // Resetar foto
             preview.src = "../assets/uploads/profile_photos/avatar-default.png";
             selectedPhotoInput.value = "";
             photoInput.value = "";
             document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
-            
+
             // Mostrar campos de login e tornar obrigatórios
             loginFields.style.display = "block";
             document.getElementById("empEmail").required = true;
             document.getElementById("empPassword").required = true;
-            
+
             deleteBtnContainer.style.display = "none";
             modalBg.style.display = "flex";
         }
@@ -438,13 +456,13 @@ if (isset($_GET['delete'])) {
             empId.value = data.id;
             empName.value = data.name;
             empRole.value = data.role;
-            
+
             empCep.value = data.cep || "";
             empCity.value = data.city || "";
             empUf.value = data.uf || "";
             empStreet.value = data.street || "";
             empNeighborhood.value = data.neighborhood || "";
-            
+
             // Foto
             selectedPhotoInput.value = "";
             photoInput.value = "";
@@ -452,13 +470,13 @@ if (isset($_GET['delete'])) {
 
             if (data.photo) {
                 if (data.photo.startsWith('assets/')) {
-                     preview.src = "../" + data.photo;
-                     // Tenta marcar na galeria se for um dos padrões
-                     const galleryItem = document.querySelector(`.gallery-item[onclick*='${data.photo}']`);
-                     if (galleryItem) galleryItem.classList.add('selected');
-                     selectedPhotoInput.value = data.photo;
+                    preview.src = "../" + data.photo;
+                    // Tenta marcar na galeria se for um dos padrões
+                    const galleryItem = document.querySelector(`.gallery-item[onclick*='${data.photo}']`);
+                    if (galleryItem) galleryItem.classList.add('selected');
+                    selectedPhotoInput.value = data.photo;
                 } else {
-                     preview.src = "../assets/uploads/funcionarios/" + data.photo;
+                    preview.src = "../assets/uploads/funcionarios/" + data.photo;
                 }
             } else {
                 preview.src = "../assets/uploads/profile_photos/avatar-default.png";
@@ -471,8 +489,8 @@ if (isset($_GET['delete'])) {
 
             // Configurar botão de excluir
             deleteLink.href = "?delete=" + data.id;
-            deleteLink.onclick = function(e) {
-                if(!confirm('Tem certeza que deseja excluir este funcionário?')) {
+            deleteLink.onclick = function (e) {
+                if (!confirm('Tem certeza que deseja excluir este funcionário?')) {
                     e.preventDefault();
                 }
             };

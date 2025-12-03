@@ -1,24 +1,25 @@
 :root {
   /* Brand Colors */
-  --brand: #2563eb;
+  --brand: #DC2626;
   /* Blue 600 */
-  --brand-light: #60a5fa;
+  --brand-light: #EF4444;
   /* Blue 400 */
-  --brand-dark: #1e40af;
+  --brand-dark: #991B1B;
   /* Blue 800 */
-  --brand-bg: #eff6ff;
+  --brand-bg: #FEF2F2;
   /* Blue 50 */
 
   /* Neutral Colors */
-  --bg: #f8fafc;
+  --bg: #FAFAFA;
   /* Slate 50 */
   --surface: #ffffff;
   /* White */
-  --text: #0f172a;
+  --text: #171717;
   /* Slate 900 */
-  --text-light: #64748b;
+  --text-light: #525252;
+  --muted: #737373;
   /* Slate 500 */
-  --border: #e2e8f0;
+  --border: #E5E5E5;
   /* Slate 200 */
 
   /* Glassmorphism */
@@ -213,7 +214,7 @@ label {
 .btn:hover {
   filter: brightness(110%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
 .btn:active {
@@ -283,7 +284,7 @@ label {
 
 /* Header */
 .top-header {
-  background: rgba(37, 99, 235, 0.95);
+  background: rgba(220, 38, 38, 0.95);
   padding: 16px 24px;
   color: white;
   box-shadow: var(--shadow);
@@ -667,7 +668,7 @@ font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4);
   cursor: pointer;
   transition: var(--transition);
   z-index: 90;
@@ -676,7 +677,7 @@ font-weight: 500;
 .fab:hover {
   transform: scale(1.1) rotate(90deg);
   background: var(--brand-dark);
-  box-shadow: 0 15px 35px rgba(37, 99, 235, 0.5);
+  box-shadow: 0 15px 35px rgba(220, 38, 38, 0.5);
 }
 
 .fab:active {
