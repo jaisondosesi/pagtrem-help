@@ -70,8 +70,9 @@ $user = $_SESSION['user'] ?? null;
             Estação Sul • Estação Central</p>
           <p><img src="../assets/images/relogio_icone.png" alt="Tempo" class="icon-img" style="width:16px;height:16px;">
             8h 15min</p>
-          <p><img src="../assets/images/notificacao_icone.png" alt="Alerta" class="icon-img"
-              style="width:16px;height:16px;"> Retorno previsto: 15/11</p>
+          <p><i class="ri-notification-3-line"
+              style="font-size:16px; color:var(--brand); margin-right:4px; vertical-align:middle;"></i> Retorno
+            previsto: 15/11</p>
         </div>
       </div>
 

@@ -76,8 +76,8 @@ if (isset($_GET['delete_notice'])) {
     </div>
 
     <div class="stat-card">
-      <img src="../assets/images/notificacao_icone.png" alt="Avisos" class="icon-img"
-        style="width:28px;height:28px;margin:0 auto;">
+      <i class="ri-notification-3-line"
+        style="font-size:28px; color:var(--brand); display:block; margin:0 auto 4px auto;"></i>
       <div class="stat-value"><?php echo $notices_count; ?></div>
       <div class="stat-label">Avisos</div>
     </div>

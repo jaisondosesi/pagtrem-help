@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
   <div class="top-header">
-    <h1><img src="../assets/images/notificacao_icone.png" alt="Avisos" class="icon-img" style="width:22px;height:22px;">
+    <h1><i class="ri-notification-3-line" style="font-size:22px; margin-right:8px;"></i>
       Avisos</h1>
   </div>
 

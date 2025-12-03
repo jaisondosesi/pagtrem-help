@@ -9,8 +9,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
   </a>
 
   <a href="avisos.php" class="<?php echo $current_page == 'avisos.php' ? 'active' : ''; ?>">
-    <img src="../assets/images/notificacao_icone.png" alt="Avisos" class="icon-img"
-      style="width:24px;height:24px;margin-bottom:4px;">
+    <i class="ri-notification-3-line" style="font-size:24px; margin-bottom:4px;"></i>
     <span>Avisos</span>
   </a>
 
