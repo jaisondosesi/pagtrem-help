@@ -2,35 +2,7 @@
 require_once('../assets/config/auth.php');
 require_once('../assets/config/db.php');
 
-// PROCESSAR FORMULÁRIO DE AVISOS
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $action = $_POST['action'] ?? '';
-  $id = $_POST['id'] ?? '';
-  $title = trim($_POST['title'] ?? '');
-  $body = trim($_POST['body'] ?? '');
-  $tag = $_POST['tag'] ?? 'Sistema';
 
-  if ($action === 'update' && $id) {
-    $stmt = $mysqli->prepare("UPDATE notices SET title=?, body=?, tag=? WHERE id=?");
-    $stmt->bind_param('sssi', $title, $body, $tag, $id);
-    $stmt->execute();
-  } elseif ($action === 'delete' && $id) {
-    $stmt = $mysqli->prepare("DELETE FROM notices WHERE id=?");
-    $stmt->bind_param('i', $id);
-    $stmt->execute();
-  }
-
-  header('Location: dashboard.php');
-  exit;
-}
-
-// DELETE VIA GET (Opcional, mas mantendo padrão)
-if (isset($_GET['delete_notice'])) {
-  $id = (int) $_GET['delete_notice'];
-  $mysqli->query("DELETE FROM notices WHERE id=$id");
-  header('Location: dashboard.php');
-  exit;
-}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -85,41 +57,6 @@ if (isset($_GET['delete_notice'])) {
           </div>
         </div>
 
-        <!-- AVISOS RECENTES -->
-        <div class="recent-section">
-          <h2>Avisos Recentes</h2>
-          <?php
-          $res = $mysqli->query("SELECT * FROM notices ORDER BY id DESC LIMIT 5");
-          if ($res->num_rows > 0) {
-            while ($n = $res->fetch_assoc()) {
-              $badge = match ($n['tag']) {
-                'Manutenção' => '<span class="badge red">Manutenção</span>',
-                'Novidades' => '<span class="badge blue">Novidades</span>',
-                default => '<span class="badge">Sistema</span>',
-              };
-
-              // Prepara dados para o JS
-              $jsonData = htmlspecialchars(json_encode($n), ENT_QUOTES, 'UTF-8');
-
-              echo "
-              <div class='notice-card'>
-                <div class='notice-top'>
-                  <div class='notice-title'>" . htmlspecialchars($n['title']) . "</div>
-                  $badge
-                </div>
-                <div class='notice-body'>" . nl2br(htmlspecialchars($n['body'])) . "</div>
-                <div class='notice-date'>" . date('d/m/Y H:i', strtotime($n['created_at'])) . "</div>
-                
-                <div style='position:absolute; top:20px; right:20px; cursor:pointer;' onclick='editNotice($jsonData)'>
-                  <i class='ri-pencil-line' style='color:var(--muted); font-size:20px;'></i>
-                </div>
-              </div>";
-            }
-          } else {
-            echo "<p class='text-muted'>Nenhum aviso recente.</p>";
-          }
-          ?>
-        </div>
 
         <!-- ATIVIDADES RECENTES -->
         <div class="recent-section">
@@ -162,74 +99,6 @@ if (isset($_GET['delete_notice'])) {
     </div>
   </div>
 
-  <!-- MODAL AVISOS -->
-  <div class="modal-bg" id="noticeModal">
-    <div class="modal" onclick="event.stopPropagation()">
-      <h2 id="modalTitle" style="margin-bottom: 24px;">Editar Aviso</h2>
-      <form method="post">
-        <input type="hidden" name="action" value="update">
-        <input type="hidden" name="id" id="noticeId">
-
-        <label>Título</label>
-        <input class="input" name="title" id="noticeTitle" required>
-
-        <label>Tag</label>
-        <select class="select" name="tag" id="noticeTag">
-          <option value="Sistema">Sistema</option>
-          <option value="Manutenção">Manutenção</option>
-          <option value="Novidades">Novidades</option>
-        </select>
-
-        <label>Mensagem</label>
-        <textarea class="textarea" name="body" id="noticeBody" rows="4" required></textarea>
-
-        <div style="display:flex; gap:12px; margin-top:24px;">
-          <button type="button" class="btn secondary" style="flex:1;" onclick="closeNoticeModal()">Cancelar</button>
-          <button type="submit" class="btn" style="flex:1;">Salvar</button>
-        </div>
-
-        <div style="margin-top:16px; text-align:center;">
-          <a href="#" id="deleteNoticeLink" class="btn secondary"
-            style="color:var(--danger); border-color:var(--danger-bg); width:100%;">Excluir Aviso</a>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    const noticeModal = document.getElementById("noticeModal");
-    const noticeId = document.getElementById("noticeId");
-    const noticeTitle = document.getElementById("noticeTitle");
-    const noticeTag = document.getElementById("noticeTag");
-    const noticeBody = document.getElementById("noticeBody");
-    const deleteNoticeLink = document.getElementById("deleteNoticeLink");
-
-    function editNotice(data) {
-      noticeId.value = data.id;
-      noticeTitle.value = data.title;
-      noticeTag.value = data.tag;
-      noticeBody.value = data.body;
-
-      deleteNoticeLink.href = "?delete_notice=" + data.id;
-      deleteNoticeLink.onclick = function (e) {
-        if (!confirm('Tem certeza que deseja excluir este aviso?')) {
-          e.preventDefault();
-        }
-      };
-
-      noticeModal.style.display = "flex";
-    }
-
-    function closeNoticeModal() {
-      noticeModal.style.display = "none";
-    }
-
-    window.addEventListener("click", function (e) {
-      if (e.target === noticeModal) {
-        closeNoticeModal();
-      }
-    });
-  </script>
 
 </body>
 
