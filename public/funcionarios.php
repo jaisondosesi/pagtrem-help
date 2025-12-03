@@ -140,8 +140,8 @@ if (isset($_GET['delete'])) {
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin-top: 10px;
+            gap: 12px;
+            margin-top: 12px;
         }
 
         .gallery-item {
@@ -199,19 +199,19 @@ if (isset($_GET['delete'])) {
 
     <!-- HEADER -->
     <div class="top-header">
-        <h1><img src="../assets/images/icones_funcionarios.png" alt="Funcionários" class="icon-img"
-                style="width:22px;height:22px;">
-            Funcionários</h1>
+        <h1><i class="ri-group-line"></i> Funcionários</h1>
     </div>
 
     <!-- LISTA DE FUNCIONÁRIOS -->
-    <div class="container" style="padding-bottom: 80px;">
+    <div class="container" style="padding-bottom: 120px;">
 
         <?php if ($feedback): ?>
-            <div class="success-box"><?php echo $feedback; ?></div>
+            <div class="badge success" style="margin-bottom: 24px; width: 100%; justify-content: center; padding: 12px;">
+                <?php echo $feedback; ?>
+            </div>
         <?php endif; ?>
 
-        <div class="routes-grid">
+        <div class="route-list">
             <?php
             $res = $mysqli->query("SELECT * FROM employees ORDER BY id DESC");
             while ($f = $res->fetch_assoc()) {
@@ -234,16 +234,16 @@ if (isset($_GET['delete'])) {
 
                 echo "
                 <div class='route-card' onclick='editEmployee($jsonData)'>
-                    <div style='display:flex; gap:15px; align-items:center;'>
-                        <img src='$photoPath' style='width:60px; height:60px; border-radius:50%; object-fit:cover; border:1px solid #eee;'>
+                    <div style='display:flex; gap:16px; align-items:center;'>
+                        <img src='$photoPath' style='width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--surface); box-shadow: var(--shadow-sm);'>
                         <div>
-                            <div class='route-title' style='margin-bottom:4px;'>" . htmlspecialchars($f['name']) . "</div>
-                            <div style='font-size:13px; color:var(--muted);'>" . htmlspecialchars($f['role']) . "</div>
+                            <div class='route-title' style='margin-bottom:4px; font-size: 1.1rem;'>" . htmlspecialchars($f['name']) . "</div>
+                            <div style='font-size:0.9rem; color:var(--text-light);'>" . htmlspecialchars($f['role']) . "</div>
                         </div>
                     </div>
                     
-                    <div class='details' style='margin-top:15px;'>
-                        <img src='../assets/images/local_icone.png' class='icon-img' style='width:16px;height:16px;'> " . htmlspecialchars($f['city']) . " - " . htmlspecialchars($f['uf']) . "
+                    <div class='details' style='margin-top:16px; padding-top: 16px; border-top: 1px solid var(--border);'>
+                        <i class='ri-map-pin-line' style='color:var(--brand);'></i> " . htmlspecialchars($f['city']) . " - " . htmlspecialchars($f['uf']) . "
                     </div>
                 </div>";
             }
@@ -259,22 +259,23 @@ if (isset($_GET['delete'])) {
     <!-- MODAL -->
     <div class="modal-bg" id="modal">
         <div class="modal" onclick="event.stopPropagation()" style="max-height:90vh; overflow-y:auto;">
-            <h2 id="modalTitle">Novo Funcionário</h2>
+            <h2 id="modalTitle" style="margin-bottom: 24px;">Novo Funcionário</h2>
             <form method="post" enctype="multipart/form-data">
                 <input type="hidden" name="action" id="formAction" value="create">
                 <input type="hidden" name="id" id="empId">
                 <input type="hidden" name="selected_photo" id="selectedPhoto">
 
                 <!-- Foto -->
-                <div style="text-align:center; margin-bottom:15px;">
+                <div style="text-align:center; margin-bottom:24px;">
                     <img id="preview" src="../assets/uploads/profile_photos/avatar-default.png"
-                        style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:1px solid #ddd; margin-bottom:10px;">
+                        style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:4px solid var(--surface); box-shadow: var(--shadow); margin-bottom:16px;">
                     <br>
 
                     <!-- Opções de Foto -->
-                    <div style="margin-bottom:10px;">
-                        <span style="font-size:13px; color:var(--muted); display:block; margin-bottom:5px;">Escolha um
-                            avatar:</span>
+                    <div style="margin-bottom:16px;">
+                        <span
+                            style="font-size:0.875rem; color:var(--text-light); display:block; margin-bottom:8px;">Escolha
+                            um avatar:</span>
                         <div class="gallery-grid">
                             <div class="gallery-item"
                                 onclick="selectGalleryPhoto('assets/images/funcionario1.png', this)">
@@ -299,10 +300,10 @@ if (isset($_GET['delete'])) {
                         </div>
                     </div>
 
-                    <div style="font-size:12px; color:var(--muted); margin:10px 0;">OU</div>
+                    <div style="font-size:0.875rem; color:var(--text-light); margin:16px 0;">OU</div>
 
                     <label for="photoInput" class="btn secondary"
-                        style="display:inline-block; width:auto; padding:5px 10px; font-size:12px;">Upload do
+                        style="display:inline-block; width:auto; padding:8px 16px; font-size:0.875rem;">Upload do
                         Computador</label>
                     <input type="file" name="photo" id="photoInput" accept="image/*" style="display:none;"
                         onchange="handleFileUpload(this)">
@@ -316,12 +317,12 @@ if (isset($_GET['delete'])) {
 
                 <!-- Campos de Login (Obrigatório para criação) -->
                 <div id="loginFields">
-                    <hr style="margin:15px 0; border:0; border-top:1px solid #eee;">
-                    <p style="font-size:13px; font-weight:600; margin-bottom:10px; color:var(--brand);">Dados de Acesso
-                        (Obrigatório)</p>
+                    <hr style="margin:24px 0; border:0; border-top:1px solid var(--border);">
+                    <p style="font-size:0.95rem; font-weight:600; margin-bottom:16px; color:var(--brand);">Dados de
+                        Acesso (Obrigatório)</p>
 
                     <label>Nível de Acesso</label>
-                    <select class="input" name="access_level" id="empAccessLevel">
+                    <select class="select" name="access_level" id="empAccessLevel">
                         <option value="user">Usuário Comum</option>
                         <option value="admin">Administrador</option>
                     </select>
@@ -332,19 +333,19 @@ if (isset($_GET['delete'])) {
                     <input class="input" name="password" id="empPassword" type="password" required>
                 </div>
 
-                <hr style="margin:15px 0; border:0; border-top:1px solid #eee;">
+                <hr style="margin:24px 0; border:0; border-top:1px solid var(--border);">
 
                 <!-- Endereço -->
-                <div style="display:flex; gap:10px; align-items:flex-end;">
+                <div style="display:flex; gap:12px; align-items:flex-end;">
                     <div style="flex:1;">
                         <label>CEP</label>
                         <input class="input" name="cep" id="empCep" onblur="buscarCEP()">
                     </div>
-                    <button type="button" class="btn" onclick="buscarCEP()" style="width:auto; margin-bottom:2px;"><i
-                            class="ri-search-line"></i></button>
+                    <button type="button" class="btn secondary" onclick="buscarCEP()"
+                        style="width:auto; margin-bottom:2px; height: 50px;"><i class="ri-search-line"></i></button>
                 </div>
 
-                <div style="display:flex; gap:10px; margin-top:10px;">
+                <div style="display:flex; gap:12px; margin-top:12px;">
                     <div style="flex:2;">
                         <label>Cidade</label>
                         <input class="input" name="city" id="empCity">
@@ -355,24 +356,24 @@ if (isset($_GET['delete'])) {
                     </div>
                 </div>
 
-                <div style="margin-top:10px;">
+                <div style="margin-top:12px;">
                     <label>Rua</label>
                     <input class="input" name="street" id="empStreet">
                 </div>
 
-                <div style="margin-top:10px;">
+                <div style="margin-top:12px;">
                     <label>Bairro</label>
                     <input class="input" name="neighborhood" id="empNeighborhood">
                 </div>
 
-                <div style="display:flex; gap:10px; margin-top:20px;">
-                    <button type="button" class="btn secondary" onclick="closeModal()">Cancelar</button>
-                    <button type="submit" class="btn">Salvar</button>
+                <div style="display:flex; gap:12px; margin-top:32px;">
+                    <button type="button" class="btn secondary" style="flex:1;" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn" style="flex:1;">Salvar</button>
                 </div>
 
-                <div id="deleteBtnContainer" style="margin-top:10px; text-align:center; display:none;">
-                    <a href="#" id="deleteLink" class="btn"
-                        style="background:#fee2e2; color:#991b1b; border-color:#fca5a5;">Excluir Funcionário</a>
+                <div id="deleteBtnContainer" style="margin-top:16px; text-align:center; display:none;">
+                    <a href="#" id="deleteLink" class="btn secondary"
+                        style="color:var(--danger); border-color:var(--danger-bg); width:100%;">Excluir Funcionário</a>
                 </div>
             </form>
         </div>

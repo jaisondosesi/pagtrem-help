@@ -72,9 +72,9 @@ if ($currentAvatar && strpos($currentAvatar, 'assets/') === 0) {
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-      margin-top: 10px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-top: 12px;
+      margin-bottom: 24px;
     }
 
     .gallery-item {
@@ -107,73 +107,82 @@ if ($currentAvatar && strpos($currentAvatar, 'assets/') === 0) {
 
   <!-- HEADER -->
   <div class="top-header">
-    <h1><img src="../assets/images/icone_adm.png" alt="Perfil" class="icon-img" style="width:22px;height:22px;"> Meu
-      Perfil</h1>
+    <h1><i class="ri-user-settings-line"></i> Meu Perfil</h1>
   </div>
 
-  <!-- CARD -->
-  <div class="profile-card">
+  <div class="container" style="padding-bottom: 100px;">
 
     <?php if ($feedback): ?>
-      <div class="badge" style="margin-bottom:12px;"><?php echo $feedback; ?></div>
+      <div class="badge success" style="margin-bottom: 24px; width: 100%; justify-content: center; padding: 12px;">
+        <?php echo $feedback; ?></div>
     <?php endif; ?>
 
-    <form method="post" enctype="multipart/form-data">
-      <input type="hidden" name="selected_photo" id="selectedPhoto">
+    <div class="card">
+      <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="selected_photo" id="selectedPhoto">
 
-      <div class="avatar-box">
-        <img id="preview" src="<?php echo $displayAvatar; ?>"
-          style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:1px solid #ddd;">
-        <br>
-        <label for="photoInput" class="btn secondary"
-          style="display:inline-block; width:auto; padding:5px 10px; font-size:12px; margin-top:10px;">Alterar
-          Foto</label>
-        <input type="file" name="avatar" id="photoInput" class="file-input" accept="image/*" style="display:none;"
-          onchange="handleFileUpload(this)">
-      </div>
+        <div style="text-align:center; margin-bottom:24px;">
+          <img id="preview" src="<?php echo $displayAvatar; ?>"
+            style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:4px solid var(--surface); box-shadow: var(--shadow);">
+          <br>
+          <label for="photoInput" class="btn secondary"
+            style="display:inline-block; width:auto; padding:8px 16px; font-size:0.875rem; margin-top:16px;">Alterar
+            Foto</label>
+          <input type="file" name="avatar" id="photoInput" class="file-input" accept="image/*" style="display:none;"
+            onchange="handleFileUpload(this)">
+        </div>
 
-      <!-- Opções de Foto (Galeria) -->
-      <div style="margin-bottom:20px; text-align:center;">
-        <span style="font-size:13px; color:var(--muted); display:block; margin-bottom:5px;">Ou escolha um avatar:</span>
-        <div class="gallery-grid">
-          <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario1.png', this)">
-            <img src="../assets/images/funcionario1.png">
-          </div>
-          <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario2.png', this)">
-            <img src="../assets/images/funcionario2.png">
-          </div>
-          <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario3.png', this)">
-            <img src="../assets/images/funcionario3.png">
-          </div>
-          <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario4.png', this)">
-            <img src="../assets/images/funcionario4.png">
-          </div>
-          <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario5.png', this)">
-            <img src="../assets/images/funcionario5.png">
+        <!-- Opções de Foto (Galeria) -->
+        <div style="margin-bottom:24px; text-align:center;">
+          <span style="font-size:0.875rem; color:var(--text-light); display:block; margin-bottom:8px;">Ou escolha um
+            avatar:</span>
+          <div class="gallery-grid">
+            <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario1.png', this)">
+              <img src="../assets/images/funcionario1.png">
+            </div>
+            <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario2.png', this)">
+              <img src="../assets/images/funcionario2.png">
+            </div>
+            <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario3.png', this)">
+              <img src="../assets/images/funcionario3.png">
+            </div>
+            <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario4.png', this)">
+              <img src="../assets/images/funcionario4.png">
+            </div>
+            <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario5.png', this)">
+              <img src="../assets/images/funcionario5.png">
+            </div>
           </div>
         </div>
-      </div>
 
-      <input class="input" name="name" value="<?php echo htmlspecialchars($me['name']); ?>" placeholder="Nome completo">
+        <label>Nome Completo</label>
+        <input class="input" name="name" value="<?php echo htmlspecialchars($me['name']); ?>"
+          placeholder="Nome completo">
 
-      <input class="input" type="email" disabled value="<?php echo htmlspecialchars($me['email']); ?>">
+        <label>E-mail</label>
+        <input class="input" type="email" disabled value="<?php echo htmlspecialchars($me['email']); ?>"
+          style="background: var(--bg);">
 
-      <input class="input" name="phone" value="<?php echo htmlspecialchars($me['phone']); ?>" placeholder="Telefone">
+        <label>Telefone</label>
+        <input class="input" name="phone" value="<?php echo htmlspecialchars($me['phone']); ?>" placeholder="Telefone">
 
-      <input class="input" name="department" value="<?php echo htmlspecialchars($me['department']); ?>"
-        placeholder="Departamento">
+        <label>Departamento</label>
+        <input class="input" name="department" value="<?php echo htmlspecialchars($me['department']); ?>"
+          placeholder="Departamento">
 
-      <input class="input" name="job_title" value="<?php echo htmlspecialchars($me['job_title']); ?>"
-        placeholder="Cargo">
+        <label>Cargo</label>
+        <input class="input" name="job_title" value="<?php echo htmlspecialchars($me['job_title']); ?>"
+          placeholder="Cargo">
 
-      <button class="btn btn-save">Salvar Alterações</button>
+        <button class="btn" style="width: 100%; margin-top: 24px;">Salvar Alterações</button>
 
-      <a href="logout_admin.php" class="btn btn-save"
-        style="background-color: #ef4444; border-color: #dc2626; margin-top: 10px; display: block; text-align: center; text-decoration: none; line-height: 20px;">
-        Sair da Conta
-      </a>
+        <a href="logout_admin.php" class="btn secondary"
+          style="color: var(--danger); border-color: var(--danger-bg); margin-top: 16px; display: flex; justify-content: center; text-decoration: none;">
+          <i class="ri-logout-box-r-line" style="margin-right: 8px;"></i> Sair da Conta
+        </a>
 
-    </form>
+      </form>
+    </div>
   </div>
 
   <!-- NAV INFERIOR -->

@@ -63,27 +63,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <link href="../assets/css/styles.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
-
-  </style>
 </head>
 
 <body>
 
-  <div class="card-login">
+  <div class="auth-card">
 
-    <div class="brand-icon"><img src="../assets/images/trem_icone.png" alt="Trem" class="icon-img"
-        style="width:52px;height:52px;"></div>
+    <div class="brand-icon">
+      <i class="ri-train-line" style="font-size: 40px;"></i>
+    </div>
 
     <h2>PagTrem</h2>
-    <div class="sub">Acesso ao sistema</div>
+    <p class="text-muted" style="margin-bottom: 24px;">Acesso ao sistema</p>
 
     <?php if ($error): ?>
-      <div class="error-box"><?php echo htmlspecialchars($error); ?></div>
+      <div class="badge red" style="margin-bottom: 16px; width: 100%; justify-content: center; padding: 8px;">
+        <?php echo htmlspecialchars($error); ?></div>
     <?php endif; ?>
 
-    <div class="tab-switch">
-      <button type="button" id="tab-cliente" class="tab-btn active" onclick="showTab('cliente')">Cliente</button>
-      <a href="login_admin.php" target="_blank" id="tab-usuario" class="tab-btn">Usuário/Admin</a>
+    <div class="tab-switch"
+      style="display: flex; gap: 8px; margin-bottom: 24px; background: var(--bg); padding: 4px; border-radius: var(--radius-sm);">
+      <button type="button" id="tab-cliente" class="btn secondary" style="flex: 1; border: none; box-shadow: none;"
+        onclick="showTab('cliente')">Cliente</button>
+      <a href="login_admin.php" id="tab-usuario" class="btn secondary"
+        style="flex: 1; border: none; box-shadow: none; text-decoration: none; justify-content: center;">Admin</a>
     </div>
 
     <!-- Form CLIENTE -->
@@ -91,17 +94,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <input type="hidden" name="login_type" value="cliente">
 
       <label>Email</label>
-      <input class="input" type="email" name="email" placeholder="cliente@vaidetrem.com" required>
+      <input class="input" type="email" name="email" placeholder="cliente@pagtrem.com" required>
 
-      <label style="margin-top:12px">Senha</label>
+      <label>Senha</label>
       <input class="input" type="password" name="password" placeholder="Sua senha" required>
-      <div style="text-align:right;margin-top:6px;font-size:13px;">
-        <a href="esqueci_senha.php">Esqueci minha senha</a>
+      <div style="text-align:right; margin-top:8px; font-size:0.875rem;">
+        <a href="esqueci_senha.php" style="color: var(--text-light);">Esqueci minha senha</a>
       </div>
 
-      <button class="btn-login" type="submit">Entrar</button>
+      <button class="btn" type="submit" style="width: 100%; margin-top: 24px;">Entrar</button>
 
-      <p class="auth-note">
+      <p class="auth-note" style="margin-top: 24px; font-size: 0.875rem;">
         Não tem conta? <a href="registrar_se.php">Registrar-se</a>
       </p>
     </form>

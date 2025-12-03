@@ -80,38 +80,50 @@ if (isset($_GET['delete'])) {
 
     <!-- HEADER -->
     <div class="top-header">
-        <h1><img src="../assets/images/rotas_icone.png" alt="Rotas" class="icon-img" style="width:22px;height:22px;">
-            Rotas</h1>
+        <h1><i class="ri-map-pin-line"></i> Rotas</h1>
     </div>
 
-    <!-- LISTA DE ROTAS -->
-    <div class="route-list" id="routeList" style="padding-bottom: 80px;">
-        <?php
-        $res = $mysqli->query("SELECT * FROM routes ORDER BY id DESC");
-        while ($r = $res->fetch_assoc()) {
-            $badgeClass = ($r['status'] === 'manutencao') ? 'red' : 'blue';
-            $badgeText = ($r['status'] === 'manutencao') ? 'Manutenção' : 'Ativa';
-            $durationFmt = formatDuration($r['duration_minutes']);
+    <div class="container">
 
-            // Prepara dados para o JS
-            $jsonData = htmlspecialchars(json_encode($r), ENT_QUOTES, 'UTF-8');
+        <!-- LISTA DE ROTAS -->
+        <div class="route-list" id="routeList">
+            <?php
+            $res = $mysqli->query("SELECT * FROM routes ORDER BY id DESC");
+            while ($r = $res->fetch_assoc()) {
+                $badgeClass = ($r['status'] === 'manutencao') ? 'red' : 'blue';
+                $badgeText = ($r['status'] === 'manutencao') ? 'Manutenção' : 'Ativa';
+                $durationFmt = formatDuration($r['duration_minutes']);
 
-            echo "
-            <div class='route-card' onclick='editRoute($jsonData)'>
-                <div class='route-title'>" . htmlspecialchars($r['name']) . "</div>
-                <span class='badge $badgeClass'>$badgeText</span>
+                // Prepara dados para o JS
+                $jsonData = htmlspecialchars(json_encode($r), ENT_QUOTES, 'UTF-8');
 
-                <div class='details'>
-                    <img src='../assets/images/local_icone.png' class='icon-img' style='width:16px;height:16px;'> Paradas: " . htmlspecialchars($r['stops'] ?? '') . "<br>
-                    <img src='../assets/images/relogio_icone.png' class='icon-img' style='width:16px;height:16px;'> Duração: $durationFmt
-                </div>
+                echo "
+                <div class='route-card' onclick='editRoute($jsonData)'>
+                    <div class='route-title'>
+                        <span>" . htmlspecialchars($r['name']) . "</span>
+                        <span class='badge $badgeClass'>$badgeText</span>
+                    </div>
 
-                <div class='live-info'>
-                    <i class='ri-notification-3-line' style='font-size:16px; color:var(--muted); margin-right:4px; vertical-align:middle;'></i> " . (!empty($r['extra_info']) ? htmlspecialchars($r['extra_info']) : 'Sem informações adicionais') . "
-                </div>
-            </div>";
-        }
-        ?>
+                    <div class='details'>
+                        <div style='display:flex; align-items:center; gap:8px;'>
+                            <i class='ri-map-pin-2-line' style='color:var(--brand);'></i>
+                            <span>Paradas: " . htmlspecialchars($r['stops'] ?? '') . "</span>
+                        </div>
+                        <div style='display:flex; align-items:center; gap:8px;'>
+                            <i class='ri-time-line' style='color:var(--brand);'></i>
+                            <span>$durationFmt</span>
+                        </div>
+                    </div>
+
+                    <div class='live-info'>
+                        <i class='ri-notification-3-line' style='font-size:18px; color:var(--text-light);'></i> 
+                        <span>" . (!empty($r['extra_info']) ? htmlspecialchars($r['extra_info']) : 'Sem informações adicionais') . "</span>
+                    </div>
+                </div>";
+            }
+            ?>
+        </div>
+
     </div>
 
     <!-- BOTÃO "+" (FAB) -->
@@ -122,17 +134,17 @@ if (isset($_GET['delete'])) {
     <!-- MODAL -->
     <div class="modal-bg" id="modal">
         <div class="modal" onclick="event.stopPropagation()">
-            <h2 id="modalTitle">Nova Rota</h2>
+            <h2 id="modalTitle" style="margin-bottom: 24px;">Nova Rota</h2>
             <form method="post">
                 <input type="hidden" name="action" id="formAction" value="create">
                 <input type="hidden" name="id" id="routeId">
 
-                <div style="display:flex; gap:10px;">
-                    <div style="flex:1;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                    <div>
                         <label>Local de Embarque</label>
                         <input class="input" name="origin" id="routeOrigin" placeholder="Ex: São Paulo" required>
                     </div>
-                    <div style="flex:1;">
+                    <div>
                         <label>Destino</label>
                         <input class="input" name="destination" id="routeDestination" placeholder="Ex: Rio de Janeiro"
                             required>
@@ -143,17 +155,17 @@ if (isset($_GET['delete'])) {
                 <input class="input" name="stops" id="routeStops" placeholder="Separadas por vírgula" required>
 
                 <label>Duração</label>
-                <div style="display:flex; gap:10px; align-items:center;">
+                <div style="display:flex; gap:12px; align-items:center;">
                     <div style="flex:1;">
                         <input type="number" class="input" name="duration_hours" id="routeHours" placeholder="Horas"
                             min="0" required>
                     </div>
-                    <span>h</span>
+                    <span style="font-weight:600; color:var(--text-light);">h</span>
                     <div style="flex:1;">
                         <input type="number" class="input" name="duration_minutes" id="routeMinutes"
                             placeholder="Minutos" min="0" max="59" required>
                     </div>
-                    <span>min</span>
+                    <span style="font-weight:600; color:var(--text-light);">min</span>
                 </div>
 
                 <label>Status</label>
@@ -166,14 +178,14 @@ if (isset($_GET['delete'])) {
                 <textarea class="textarea" name="extra_info" id="routeExtra" rows="2"
                     placeholder="Ex: Atrasos, previsões..."></textarea>
 
-                <div style="display:flex; gap:10px; margin-top:15px;">
-                    <button type="button" class="btn secondary" onclick="closeModal()">Cancelar</button>
-                    <button type="submit" class="btn">Salvar</button>
+                <div style="display:flex; gap:12px; margin-top:24px;">
+                    <button type="button" class="btn secondary" style="flex:1;" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn" style="flex:1;">Salvar</button>
                 </div>
 
-                <div id="deleteBtnContainer" style="margin-top:10px; text-align:center; display:none;">
-                    <a href="#" id="deleteLink" class="btn"
-                        style="background:#fee2e2; color:#991b1b; border-color:#fca5a5;">Excluir Rota</a>
+                <div id="deleteBtnContainer" style="margin-top:16px; text-align:center; display:none;">
+                    <a href="#" id="deleteLink" class="btn secondary"
+                        style="color:var(--danger); border-color:var(--danger-bg); width:100%;">Excluir Rota</a>
                 </div>
             </form>
         </div>

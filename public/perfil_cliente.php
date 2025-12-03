@@ -22,36 +22,44 @@ if ($user['role'] !== 'user') {
 
 <body>
 
-  <div class="container" style="max-width:900px; margin: 20px auto;">
+  <div class="top-header">
+    <h1><i class="ri-user-smile-line"></i> Meu Perfil</h1>
+  </div>
 
-    <div class="topbar">
-      <div class="profile-icon"><img src="../assets/images/icone_adm.png" alt="Perfil" class="icon-img"
-          style="width:45px;height:45px;"></div>
-      <h2><?php echo htmlspecialchars($user['name']); ?></h2>
-      <p>Perfil do Cliente</p>
+  <div class="container" style="padding-bottom: 100px;">
+
+    <div class="card" style="text-align: center; padding: 32px 24px; margin-bottom: 24px;">
+      <div
+        style="width: 80px; height: 80px; background: var(--brand-light); color: var(--brand); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 32px;">
+        <i class="ri-user-line"></i>
+      </div>
+      <h2 style="margin-bottom: 4px;"><?php echo htmlspecialchars($user['name']); ?></h2>
+      <p class="text-muted">Cliente PagTrem</p>
     </div>
 
-    <div class="card-info">
-      <h3>Informações da Conta</h3>
+    <div class="card">
+      <h3 style="margin-bottom: 16px;">Informações da Conta</h3>
 
-      <div class="info-row">
-        <span class="info-label">Nome</span>
-        <span class="info-value"><?php echo htmlspecialchars($user['name']); ?></span>
+      <div
+        style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border);">
+        <span class="text-muted">Nome</span>
+        <span style="font-weight: 500;"><?php echo htmlspecialchars($user['name']); ?></span>
       </div>
 
-      <div class="info-row">
-        <span class="info-label">E-mail</span>
-        <span class="info-value"><?php echo htmlspecialchars($user['email']); ?></span>
+      <div
+        style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border);">
+        <span class="text-muted">E-mail</span>
+        <span style="font-weight: 500;"><?php echo htmlspecialchars($user['email']); ?></span>
       </div>
 
-      <div class="info-row">
-        <span class="info-label">Tipo de Conta</span>
-        <span class="info-value">Cliente</span>
+      <div style="display: flex; justify-content: space-between; padding: 12px 0;">
+        <span class="text-muted">Tipo de Conta</span>
+        <span class="badge blue">Cliente</span>
       </div>
 
-      <a href="editar_perfil_cliente.php" class="edit-btn">
-        <img src="../assets/images/icone_adm.png" alt="Editar" class="icon-img" style="width:16px;height:16px;"> Editar
-        Perfil
+      <a href="editar_perfil_cliente.php" class="btn secondary"
+        style="width: 100%; margin-top: 24px; justify-content: center;">
+        <i class="ri-pencil-line" style="margin-right: 8px;"></i> Editar Perfil
       </a>
     </div>
 

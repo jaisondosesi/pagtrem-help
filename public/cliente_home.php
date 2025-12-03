@@ -16,78 +16,103 @@ $user = $_SESSION['user'] ?? null;
 
 <body>
 
-  <div class="container" style="max-width:960px; margin: 20px auto;">
+  <div class="top-header">
+    <h1><i class="ri-user-smile-line"></i> Olá, <?php echo htmlspecialchars($user['name']); ?>!</h1>
+  </div>
 
-    <div class="topbar">
-      <div class="brand-icon"><img src="../assets/images/trem_icone.png" alt="Trem" class="icon-img"
-          style="width:28px;height:28px;"></div>
-      <h2>Olá, <?php echo htmlspecialchars($user['name']); ?>!</h2>
-      <p>Bem-vindo(a) à sua área de rotas.</p>
+  <div class="container" style="padding-bottom: 100px;">
+
+    <div class="card" style="margin-bottom: 24px; text-align: center; padding: 32px 24px;">
+      <i class="ri-train-line" style="font-size: 48px; color: var(--brand); margin-bottom: 16px; display: block;"></i>
+      <h2 style="margin-bottom: 8px;">Bem-vindo ao PagTrem</h2>
+      <p class="text-muted">Acompanhe suas rotas e viagens em tempo real.</p>
     </div>
 
-    <h3 class="section-title">Rotas Disponíveis</h3>
-    <p class="link-muted">Escolha uma rota para visualizar mais informações.</p>
+    <h3 style="margin-bottom: 16px; padding-left: 4px;">Rotas Disponíveis</h3>
 
-    <div class="routes-grid">
+    <div class="route-list">
 
       <div class="route-card">
-        <div class="route-header">
-          <h3>São Paulo → Rio de Janeiro</h3>
-          <span class="route-tag">Ativa</span>
+        <div class="route-title">
+          <span>São Paulo → Rio de Janeiro</span>
+          <span class="badge blue">Ativa</span>
         </div>
-        <div class="route-info">
-          <p><img src="../assets/images/local_icone.png" alt="Local" class="icon-img" style="width:16px;height:16px;">
-            Estações: Central • Norte • Sul</p>
-          <p><img src="../assets/images/relogio_icone.png" alt="Tempo" class="icon-img" style="width:16px;height:16px;">
-            6h 30min</p>
-          <p><img src="../assets/images/relogio_icone.png" alt="Calendário" class="icon-img"
-              style="width:16px;height:16px;"> Opera diariamente</p>
+        <div class="details">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="ri-map-pin-2-line" style="color:var(--brand);"></i>
+            <span>Estações: Central • Norte • Sul</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="ri-time-line" style="color:var(--brand);"></i>
+            <span>6h 30min</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="ri-calendar-line" style="color:var(--brand);"></i>
+            <span>Opera diariamente</span>
+          </div>
         </div>
       </div>
 
       <div class="route-card">
-        <div class="route-header">
-          <h3>Campinas → Santos</h3>
-          <span class="route-tag">Ativa</span>
+        <div class="route-title">
+          <span>Campinas → Santos</span>
+          <span class="badge blue">Ativa</span>
         </div>
-        <div class="route-info">
-          <p><img src="../assets/images/local_icone.png" alt="Local" class="icon-img" style="width:16px;height:16px;">
-            KM 45 • Ponte Rio Grande</p>
-          <p><img src="../assets/images/relogio_icone.png" alt="Tempo" class="icon-img" style="width:16px;height:16px;">
-            3h 45min</p>
-          <p><img src="../assets/images/relogio_icone.png" alt="Calendário" class="icon-img"
-              style="width:16px;height:16px;"> Opera diariamente</p>
-        </div>
-      </div>
-
-      <div class="route-card">
-        <div class="route-header">
-          <h3>Belo Horizonte → São Paulo</h3>
-          <span class="route-tag red">Manutenção</span>
-        </div>
-        <div class="route-info">
-          <p><img src="../assets/images/local_icone.png" alt="Local" class="icon-img" style="width:16px;height:16px;">
-            Estação Sul • Estação Central</p>
-          <p><img src="../assets/images/relogio_icone.png" alt="Tempo" class="icon-img" style="width:16px;height:16px;">
-            8h 15min</p>
-          <p><i class="ri-notification-3-line"
-              style="font-size:16px; color:var(--brand); margin-right:4px; vertical-align:middle;"></i> Retorno
-            previsto: 15/11</p>
+        <div class="details">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="ri-map-pin-2-line" style="color:var(--brand);"></i>
+            <span>KM 45 • Ponte Rio Grande</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="ri-time-line" style="color:var(--brand);"></i>
+            <span>3h 45min</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="ri-calendar-line" style="color:var(--brand);"></i>
+            <span>Opera diariamente</span>
+          </div>
         </div>
       </div>
 
       <div class="route-card">
-        <div class="route-header">
-          <h3>Curitiba → Florianópolis</h3>
-          <span class="route-tag">Ativa</span>
+        <div class="route-title">
+          <span>Belo Horizonte → São Paulo</span>
+          <span class="badge red">Manutenção</span>
         </div>
-        <div class="route-info">
-          <p><img src="../assets/images/local_icone.png" alt="Local" class="icon-img" style="width:16px;height:16px;">
-            Estação Norte • Ponte Rio Grande</p>
-          <p><img src="../assets/images/relogio_icone.png" alt="Tempo" class="icon-img" style="width:16px;height:16px;">
-            5h 20min</p>
-          <p><img src="../assets/images/relogio_icone.png" alt="Calendário" class="icon-img"
-              style="width:16px;height:16px;"> Opera diariamente</p>
+        <div class="details">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="ri-map-pin-2-line" style="color:var(--brand);"></i>
+            <span>Estação Sul • Estação Central</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="ri-time-line" style="color:var(--brand);"></i>
+            <span>8h 15min</span>
+          </div>
+        </div>
+        <div class="live-info">
+          <i class="ri-notification-3-line" style="font-size:18px; color:var(--text-light);"></i>
+          <span>Retorno previsto: 15/11</span>
+        </div>
+      </div>
+
+      <div class="route-card">
+        <div class="route-title">
+          <span>Curitiba → Florianópolis</span>
+          <span class="badge blue">Ativa</span>
+        </div>
+        <div class="details">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="ri-map-pin-2-line" style="color:var(--brand);"></i>
+            <span>Estação Norte • Ponte Rio Grande</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="ri-time-line" style="color:var(--brand);"></i>
+            <span>5h 20min</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="ri-calendar-line" style="color:var(--brand);"></i>
+            <span>Opera diariamente</span>
+          </div>
         </div>
       </div>
 

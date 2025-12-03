@@ -42,34 +42,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 
-  <div class="card-login">
+  <div class="auth-card">
 
-    <div class="brand-icon"><img src="../assets/images/icone_adm.png" alt="Cliente" class="icon-img"
-        style="width:52px;height:52px;"></div>
+    <div class="brand-icon">
+      <i class="ri-user-smile-line" style="font-size: 40px;"></i>
+    </div>
 
     <h2>Login do Cliente</h2>
-    <div class="sub">Acesse sua área de rotas</div>
+    <p class="text-muted" style="margin-bottom: 24px;">Acesse sua área de rotas</p>
 
     <?php if ($error): ?>
-      <div class="error-box"><?php echo htmlspecialchars($error); ?></div>
+      <div class="badge red" style="margin-bottom: 16px; width: 100%; justify-content: center; padding: 8px;">
+        <?php echo htmlspecialchars($error); ?></div>
     <?php endif; ?>
 
     <form method="post">
       <label>Email</label>
-      <input class="input" type="email" name="email" placeholder="cliente@vaidetrem.com" required>
+      <input class="input" type="email" name="email" placeholder="cliente@pagtrem.com" required>
 
-      <label style="margin-top:12px;">Senha</label>
+      <label>Senha</label>
       <input class="input" type="password" name="password" placeholder="Senha" required>
-      <div style="text-align:right;margin-top:6px;font-size:13px;">
-        <a href="esqueci_senha.php">Esqueci minha senha</a>
+      <div style="text-align:right; margin-top:8px; font-size:0.875rem;">
+        <a href="esqueci_senha.php" style="color: var(--text-light);">Esqueci minha senha</a>
       </div>
 
-      <button class="btn-login" type="submit">Entrar</button>
+      <button class="btn" type="submit" style="width: 100%; margin-top: 24px;">Entrar</button>
     </form>
 
-    <div class="back-links">
-      Não tem conta? <a href="registrar_se.php">Registrar-se</a><br>
-      <a href="login_admin.php" style="font-size:13px;">
+    <div class="back-links" style="margin-top: 24px; text-align: center; font-size: 0.875rem;">
+      <p>Não tem conta? <a href="registrar_se.php">Registrar-se</a></p>
+      <a href="login_admin.php" style="color: var(--text-light); margin-top: 12px; display: inline-block;">
         Entrar como administrador
       </a>
     </div>

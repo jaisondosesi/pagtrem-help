@@ -57,19 +57,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 
-  <div class="card-register">
+  <div class="auth-card">
 
-    <div class="brand-icon"><img src="../assets/images/registrar_conta.png" alt="Registrar" class="icon-img"
-        style="width:52px;height:52px;"></div>
+    <div class="brand-icon">
+      <i class="ri-user-add-line" style="font-size: 40px;"></i>
+    </div>
     <h2>Crie sua conta</h2>
-    <div class="sub">Pronto para viajar com a gente?</div>
+    <p class="text-muted" style="margin-bottom: 24px;">Pronto para viajar com a gente?</p>
 
     <?php if ($msg): ?>
-      <div class="success-box"><?php echo htmlspecialchars($msg); ?></div>
+      <div class="badge success" style="margin-bottom: 16px; width: 100%; justify-content: center; padding: 8px;">
+        <?php echo htmlspecialchars($msg); ?></div>
     <?php endif; ?>
 
     <?php if ($err): ?>
-      <div class="error-box"><?php echo htmlspecialchars($err); ?></div>
+      <div class="badge red" style="margin-bottom: 16px; width: 100%; justify-content: center; padding: 8px;">
+        <?php echo htmlspecialchars($err); ?></div>
     <?php endif; ?>
 
     <form method="post">
@@ -77,26 +80,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <label>Nome completo</label>
       <input class="input" name="name" placeholder="Seu nome" required>
 
-      <label style="margin-top:12px;">E-mail</label>
+      <label>E-mail</label>
       <input class="input" type="email" name="email" placeholder="email@exemplo.com" required>
 
-      <label style="margin-top:12px;">Senha</label>
+      <label>Senha</label>
       <input class="input" type="password" name="password" placeholder="Digite uma senha" required>
 
-      <label style="margin-top:12px;">Endereço</label>
-      <div class="row-cep">
-        <input class="input small" id="cep" placeholder="CEP">
-        <input class="input small" id="city" placeholder="Cidade">
-        <input class="input small" id="uf" placeholder="UF">
+      <label>Endereço</label>
+      <div class="row-cep" style="display: flex; gap: 12px; margin-bottom: 12px;">
+        <input class="input" id="cep" placeholder="CEP" style="flex: 1;">
+        <input class="input" id="city" placeholder="Cidade" style="flex: 2;">
+        <input class="input" id="uf" placeholder="UF" style="width: 60px;">
       </div>
 
-      <button type="button" class="btn-outline" onclick="buscarCEP('cep',{city:'city',state:'uf'})">
+      <button type="button" class="btn secondary" onclick="buscarCEP('cep',{city:'city',state:'uf'})"
+        style="width: 100%; margin-bottom: 24px;">
         Buscar CEP
       </button>
 
-      <button type="submit" class="btn-main">Registrar</button>
+      <button type="submit" class="btn" style="width: 100%;">Registrar</button>
 
-      <div class="back-link">
+      <div style="margin-top: 24px; text-align: center; font-size: 0.875rem;">
         Já tem conta? <a href="login.php">Entrar</a>
       </div>
     </form>
