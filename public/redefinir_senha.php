@@ -49,34 +49,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 
-    <div class="card-login">
-        <div class="brand-icon"><img src="../assets/images/trem_icone.png" alt="Trem" class="icon-img"
-                style="width:52px;height:52px;"></div>
+    <div class="auth-card">
+        <div class="brand-icon">
+            <i class="ri-key-2-line" style="font-size: 40px;"></i>
+        </div>
         <h2>Nova Senha</h2>
-        <div class="sub">Defina sua nova senha para <strong><?php echo htmlspecialchars($email); ?></strong></div>
+        <p class="text-muted" style="margin-bottom: 24px;">Defina sua nova senha para
+            <strong><?php echo htmlspecialchars($email); ?></strong></p>
 
         <?php if ($error): ?>
-            <div class="error-box"><?php echo htmlspecialchars($error); ?></div>
+            <div class="badge red" style="margin-bottom: 16px; width: 100%; justify-content: center; padding: 8px;">
+                <?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
 
         <?php if ($success): ?>
-            <div class="success-box"><?php echo htmlspecialchars($success); ?></div>
+            <div class="badge success" style="margin-bottom: 16px; width: 100%; justify-content: center; padding: 8px;">
+                <?php echo htmlspecialchars($success); ?></div>
         <?php endif; ?>
 
         <form method="post">
             <label>Nova Senha</label>
             <input class="input" type="password" name="password" placeholder="Nova senha" required>
 
-            <label style="margin-top:12px;">Confirmar Senha</label>
+            <label>Confirmar Senha</label>
             <input class="input" type="password" name="confirm_password" placeholder="Confirme a senha" required>
 
-            <button class="btn-login" type="submit" style="margin-top:20px;">Redefinir Senha</button>
+            <button class="btn" type="submit" style="width: 100%; margin-top: 24px;">Redefinir Senha</button>
         </form>
 
-        <a href="login.php" class="back-link">
-            <img src="../assets/images/logout_icone.png" alt="Voltar" class="icon-img"
-                style="width:16px;height:16px;transform: rotate(180deg);"> Cancelar
-        </a>
+        <div style="margin-top: 24px; text-align: center;">
+            <a href="login.php"
+                style="display: inline-flex; align-items: center; gap: 8px; color: var(--text-light); font-size: 0.875rem;">
+                <i class="ri-close-circle-line"></i> Cancelar
+            </a>
+        </div>
     </div>
 
 </body>

@@ -38,27 +38,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 
-    <div class="card-login">
-        <div class="brand-icon"><img src="../assets/images/trem_icone.png" alt="Trem" class="icon-img"
-                style="width:52px;height:52px;"></div>
+    <div class="auth-card">
+        <div class="brand-icon">
+            <i class="ri-lock-password-line" style="font-size: 40px;"></i>
+        </div>
         <h2>Recuperar Senha</h2>
-        <div class="sub">Digite seu e-mail para continuar</div>
+        <p class="text-muted" style="margin-bottom: 24px;">Digite seu e-mail para continuar</p>
 
         <?php if ($error): ?>
-            <div class="error-box"><?php echo htmlspecialchars($error); ?></div>
+            <div class="badge red" style="margin-bottom: 16px; width: 100%; justify-content: center; padding: 8px;">
+                <?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
 
         <form method="post">
             <label>E-mail</label>
             <input class="input" type="email" name="email" placeholder="seu@email.com" required>
 
-            <button class="btn-login" type="submit" style="margin-top:20px;">Continuar</button>
+            <button class="btn" type="submit" style="width: 100%; margin-top: 24px;">Continuar</button>
         </form>
 
-        <a href="login.php" class="back-link">
-            <img src="../assets/images/logout_icone.png" alt="Voltar" class="icon-img"
-                style="width:16px;height:16px;transform: rotate(180deg);"> Voltar ao login
-        </a>
+        <div style="margin-top: 24px; text-align: center;">
+            <a href="login.php"
+                style="display: inline-flex; align-items: center; gap: 8px; color: var(--text-light); font-size: 0.875rem;">
+                <i class="ri-arrow-left-line"></i> Voltar ao login
+            </a>
+        </div>
     </div>
 
 </body>

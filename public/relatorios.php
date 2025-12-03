@@ -17,40 +17,48 @@ require_once('../assets/config/db.php');
 
   <!-- HEADER -->
   <div class="top-header">
-    <h1><img src="../assets/images/grafico_icone.png" alt="Relatórios" class="icon-img" style="width:22px;height:22px;">
-      Relatórios</h1>
+    <h1><i class="ri-bar-chart-2-line"></i> Relatórios</h1>
   </div>
 
-  <div class="container" style="padding-bottom: 80px;">
+  <div class="container" style="padding-bottom: 100px;">
     <!-- KPI GRID -->
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-label">Viagens/Mês</div>
-        <div class="kpi-value">185</div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <i class="ri-train-line"></i>
+        <div class="stat-value">185</div>
+        <div class="stat-label">Viagens/Mês</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Pontualidade</div>
-        <div class="kpi-value">94%</div>
+      <div class="stat-card">
+        <i class="ri-time-line"></i>
+        <div class="stat-value">94%</div>
+        <div class="stat-label">Pontualidade</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Satisfação</div>
-        <div class="kpi-value">4.7</div>
+      <div class="stat-card">
+        <i class="ri-emotion-happy-line"></i>
+        <div class="stat-value">4.7</div>
+        <div class="stat-label">Satisfação</div>
       </div>
     </div>
 
     <!-- CHARTS -->
-    <div class="chart-section">
+    <div class="chart-section" style="display: flex; flex-direction: column; gap: 24px; margin-top: 32px;">
 
-      <div class="chart-card">
-        <strong>Passageiros e Viagens por Mês</strong>
-        <div class="chart-sub">Últimos 6 meses</div>
+      <div class="card">
+        <div style="margin-bottom: 16px;">
+          <strong style="font-size: 1.1rem; display: block;">Passageiros e Viagens por Mês</strong>
+          <span class="text-muted" style="font-size: 0.9rem;">Últimos 6 meses</span>
+        </div>
         <canvas id="chartPassageiros"></canvas>
       </div>
 
-      <div class="chart-card">
-        <strong>Distribuição por Rota</strong>
-        <div class="chart-sub">Percentual de uso</div>
-        <canvas id="chartRotas"></canvas>
+      <div class="card">
+        <div style="margin-bottom: 16px;">
+          <strong style="font-size: 1.1rem; display: block;">Distribuição por Rota</strong>
+          <span class="text-muted" style="font-size: 0.9rem;">Percentual de uso</span>
+        </div>
+        <div style="max-width: 400px; margin: 0 auto;">
+          <canvas id="chartRotas"></canvas>
+        </div>
       </div>
 
     </div>
@@ -68,8 +76,8 @@ require_once('../assets/config/db.php');
         datasets: [{
           label: 'Passageiros (k)',
           data: [8.5, 9.2, 8.8, 9.5, 10.1, 10.2],
-          borderColor: '#2563eb',
-          backgroundColor: 'rgba(37, 99, 235, 0.1)',
+          borderColor: '#DC2626',
+          backgroundColor: 'rgba(220, 38, 38, 0.1)',
           tension: 0.4,
           fill: true
         }, {
@@ -115,9 +123,9 @@ require_once('../assets/config/db.php');
         datasets: [{
           data: [35, 25, 20, 20],
           backgroundColor: [
-            '#2563eb',
+            '#DC2626',
             '#10b981',
-            '#ef4444',
+            '#2563eb',
             '#f59e0b'
           ],
           borderWidth: 0
