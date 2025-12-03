@@ -197,321 +197,332 @@ if (isset($_GET['delete'])) {
 
 <body>
 
-    <!-- HEADER -->
-    <div class="top-header">
-        <h1><i class="ri-group-line"></i> Funcionários</h1>
-    </div>
+    <div class="layout-wrapper">
+        <?php include '_partials/sidebar_admin.php'; ?>
 
-    <!-- LISTA DE FUNCIONÁRIOS -->
-    <div class="container" style="padding-bottom: 120px;">
-
-        <?php if ($feedback): ?>
-            <div class="badge success" style="margin-bottom: 24px; width: 100%; justify-content: center; padding: 12px;">
-                <?php echo $feedback; ?>
+        <div class="main-content">
+            <!-- HEADER -->
+            <div class="top-header">
+                <h1><i class="ri-group-line"></i> Funcionários</h1>
             </div>
-        <?php endif; ?>
 
-        <div class="route-list">
-            <?php
-            $res = $mysqli->query("SELECT * FROM employees ORDER BY id DESC");
-            while ($f = $res->fetch_assoc()) {
-                // Lógica de exibição da foto:
-                // 1. Se começar com "assets/", é caminho relativo direto (galeria)
-                // 2. Se não, assume que está em uploads/funcionarios/
-                // 3. Fallback
-            
-                $photoVal = $f['photo'];
-                if ($photoVal && strpos($photoVal, 'assets/') === 0) {
-                    $photoPath = '../' . $photoVal; // Ajuste pois estamos em public/
-                } elseif ($photoVal) {
-                    $photoPath = '../assets/uploads/funcionarios/' . $photoVal;
-                } else {
-                    $photoPath = '../assets/uploads/profile_photos/avatar-default.png';
-                }
+            <!-- LISTA DE FUNCIONÁRIOS -->
+            <div class="container" style="padding-bottom: 120px;">
 
-                // Dados para JS
-                $jsonData = htmlspecialchars(json_encode($f), ENT_QUOTES, 'UTF-8');
-
-                echo "
-                <div class='route-card' onclick='editEmployee($jsonData)'>
-                    <div style='display:flex; gap:16px; align-items:center;'>
-                        <img src='$photoPath' style='width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--surface); box-shadow: var(--shadow-sm);'>
-                        <div>
-                            <div class='route-title' style='margin-bottom:4px; font-size: 1.1rem;'>" . htmlspecialchars($f['name']) . "</div>
-                            <div style='font-size:0.9rem; color:var(--text-light);'>" . htmlspecialchars($f['role']) . "</div>
-                        </div>
+                <?php if ($feedback): ?>
+                    <div class="badge success"
+                        style="margin-bottom: 24px; width: 100%; justify-content: center; padding: 12px;">
+                        <?php echo $feedback; ?>
                     </div>
+                <?php endif; ?>
+
+                <div class="route-list">
+                    <?php
+                    $res = $mysqli->query("SELECT * FROM employees ORDER BY id DESC");
+                    while ($f = $res->fetch_assoc()) {
+                        // Lógica de exibição da foto:
+                        // 1. Se começar com "assets/", é caminho relativo direto (galeria)
+                        // 2. Se não, assume que está em uploads/funcionarios/
+                        // 3. Fallback
                     
-                    <div class='details' style='margin-top:16px; padding-top: 16px; border-top: 1px solid var(--border);'>
-                        <i class='ri-map-pin-line' style='color:var(--brand);'></i> " . htmlspecialchars($f['city']) . " - " . htmlspecialchars($f['uf']) . "
-                    </div>
-                </div>";
-            }
-            ?>
-        </div>
-    </div>
+                        $photoVal = $f['photo'];
+                        if ($photoVal && strpos($photoVal, 'assets/') === 0) {
+                            $photoPath = '../' . $photoVal; // Ajuste pois estamos em public/
+                        } elseif ($photoVal) {
+                            $photoPath = '../assets/uploads/funcionarios/' . $photoVal;
+                        } else {
+                            $photoPath = '../assets/uploads/profile_photos/avatar-default.png';
+                        }
 
-    <!-- BOTÃO "+" (FAB) -->
-    <div class="fab" onclick="openCreateModal()">
-        <i class="ri-add-line" style="font-size: 32px;"></i>
-    </div>
+                        // Dados para JS
+                        $jsonData = htmlspecialchars(json_encode($f), ENT_QUOTES, 'UTF-8');
 
-    <!-- MODAL -->
-    <div class="modal-bg" id="modal">
-        <div class="modal" onclick="event.stopPropagation()" style="max-height:90vh; overflow-y:auto;">
-            <h2 id="modalTitle" style="margin-bottom: 24px;">Novo Funcionário</h2>
-            <form method="post" enctype="multipart/form-data">
-                <input type="hidden" name="action" id="formAction" value="create">
-                <input type="hidden" name="id" id="empId">
-                <input type="hidden" name="selected_photo" id="selectedPhoto">
+                        echo "
+                        <div class='route-card' onclick='editEmployee($jsonData)'>
+                            <div style='display:flex; gap:16px; align-items:center;'>
+                                <img src='$photoPath' style='width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--surface); box-shadow: var(--shadow-sm);'>
+                                <div>
+                                    <div class='route-title' style='margin-bottom:4px; font-size: 1.1rem;'>" . htmlspecialchars($f['name']) . "</div>
+                                    <div style='font-size:0.9rem; color:var(--text-light);'>" . htmlspecialchars($f['role']) . "</div>
+                                </div>
+                            </div>
+                            
+                            <div class='details' style='margin-top:16px; padding-top: 16px; border-top: 1px solid var(--border);'>
+                                <i class='ri-map-pin-line' style='color:var(--brand);'></i> " . htmlspecialchars($f['city']) . " - " . htmlspecialchars($f['uf']) . "
+                            </div>
+                        </div>";
+                    }
+                    ?>
+                </div>
+            </div>
 
-                <!-- Foto -->
-                <div style="text-align:center; margin-bottom:24px;">
-                    <img id="preview" src="../assets/uploads/profile_photos/avatar-default.png"
-                        style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:4px solid var(--surface); box-shadow: var(--shadow); margin-bottom:16px;">
-                    <br>
+            <!-- BOTÃO "+" (FAB) -->
+            <div class="fab" onclick="openCreateModal()">
+                <i class="ri-add-line" style="font-size: 32px;"></i>
+            </div>
 
-                    <!-- Opções de Foto -->
-                    <div style="margin-bottom:16px;">
-                        <span
-                            style="font-size:0.875rem; color:var(--text-light); display:block; margin-bottom:8px;">Escolha
-                            um avatar:</span>
-                        <div class="gallery-grid">
-                            <div class="gallery-item"
-                                onclick="selectGalleryPhoto('assets/images/funcionario1.png', this)">
-                                <img src="../assets/images/funcionario1.png">
+            <!-- MODAL -->
+            <div class="modal-bg" id="modal">
+                <div class="modal" onclick="event.stopPropagation()" style="max-height:90vh; overflow-y:auto;">
+                    <h2 id="modalTitle" style="margin-bottom: 24px;">Novo Funcionário</h2>
+                    <form method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="action" id="formAction" value="create">
+                        <input type="hidden" name="id" id="empId">
+                        <input type="hidden" name="selected_photo" id="selectedPhoto">
+
+                        <!-- Foto -->
+                        <div style="text-align:center; margin-bottom:24px;">
+                            <img id="preview" src="../assets/uploads/profile_photos/avatar-default.png"
+                                style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:4px solid var(--surface); box-shadow: var(--shadow); margin-bottom:16px;">
+                            <br>
+
+                            <!-- Opções de Foto -->
+                            <div style="margin-bottom:16px;">
+                                <span
+                                    style="font-size:0.875rem; color:var(--text-light); display:block; margin-bottom:8px;">Escolha
+                                    um avatar:</span>
+                                <div class="gallery-grid">
+                                    <div class="gallery-item"
+                                        onclick="selectGalleryPhoto('assets/images/funcionario1.png', this)">
+                                        <img src="../assets/images/funcionario1.png">
+                                    </div>
+                                    <div class="gallery-item"
+                                        onclick="selectGalleryPhoto('assets/images/funcionario2.png', this)">
+                                        <img src="../assets/images/funcionario2.png">
+                                    </div>
+                                    <div class="gallery-item"
+                                        onclick="selectGalleryPhoto('assets/images/funcionario3.png', this)">
+                                        <img src="../assets/images/funcionario3.png">
+                                    </div>
+                                    <div class="gallery-item"
+                                        onclick="selectGalleryPhoto('assets/images/funcionario4.png', this)">
+                                        <img src="../assets/images/funcionario4.png">
+                                    </div>
+                                    <div class="gallery-item"
+                                        onclick="selectGalleryPhoto('assets/images/funcionario5.png', this)">
+                                        <img src="../assets/images/funcionario5.png">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="gallery-item"
-                                onclick="selectGalleryPhoto('assets/images/funcionario2.png', this)">
-                                <img src="../assets/images/funcionario2.png">
+
+                            <div style="font-size:0.875rem; color:var(--text-light); margin:16px 0;">OU</div>
+
+                            <label for="photoInput" class="btn secondary"
+                                style="display:inline-block; width:auto; padding:8px 16px; font-size:0.875rem;">Upload
+                                do
+                                Computador</label>
+                            <input type="file" name="photo" id="photoInput" accept="image/*" style="display:none;"
+                                onchange="handleFileUpload(this)">
+                        </div>
+
+                        <label>Nome Completo</label>
+                        <input class="input" name="name" id="empName" required>
+
+                        <label>Cargo</label>
+                        <input class="input" name="role" id="empRole" required>
+
+                        <!-- Campos de Login (Obrigatório para criação) -->
+                        <div id="loginFields">
+                            <hr style="margin:24px 0; border:0; border-top:1px solid var(--border);">
+                            <p style="font-size:0.95rem; font-weight:600; margin-bottom:16px; color:var(--brand);">Dados
+                                de
+                                Acesso (Obrigatório)</p>
+
+                            <label>Nível de Acesso</label>
+                            <select class="select" name="access_level" id="empAccessLevel">
+                                <option value="user">Usuário Comum</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+
+                            <label>E-mail</label>
+                            <input class="input" name="email" id="empEmail" type="email" required>
+                            <label>Senha</label>
+                            <input class="input" name="password" id="empPassword" type="password" required>
+                        </div>
+
+                        <hr style="margin:24px 0; border:0; border-top:1px solid var(--border);">
+
+                        <!-- Endereço -->
+                        <div style="display:flex; gap:12px; align-items:flex-end;">
+                            <div style="flex:1;">
+                                <label>CEP</label>
+                                <input class="input" name="cep" id="empCep" onblur="buscarCEP()">
                             </div>
-                            <div class="gallery-item"
-                                onclick="selectGalleryPhoto('assets/images/funcionario3.png', this)">
-                                <img src="../assets/images/funcionario3.png">
+                            <button type="button" class="btn secondary" onclick="buscarCEP()"
+                                style="width:auto; margin-bottom:2px; height: 50px;"><i
+                                    class="ri-search-line"></i></button>
+                        </div>
+
+                        <div style="display:flex; gap:12px; margin-top:12px;">
+                            <div style="flex:2;">
+                                <label>Cidade</label>
+                                <input class="input" name="city" id="empCity">
                             </div>
-                            <div class="gallery-item"
-                                onclick="selectGalleryPhoto('assets/images/funcionario4.png', this)">
-                                <img src="../assets/images/funcionario4.png">
-                            </div>
-                            <div class="gallery-item"
-                                onclick="selectGalleryPhoto('assets/images/funcionario5.png', this)">
-                                <img src="../assets/images/funcionario5.png">
+                            <div style="flex:1;">
+                                <label>UF</label>
+                                <input class="input" name="uf" id="empUf">
                             </div>
                         </div>
-                    </div>
 
-                    <div style="font-size:0.875rem; color:var(--text-light); margin:16px 0;">OU</div>
+                        <div style="margin-top:12px;">
+                            <label>Rua</label>
+                            <input class="input" name="street" id="empStreet">
+                        </div>
 
-                    <label for="photoInput" class="btn secondary"
-                        style="display:inline-block; width:auto; padding:8px 16px; font-size:0.875rem;">Upload do
-                        Computador</label>
-                    <input type="file" name="photo" id="photoInput" accept="image/*" style="display:none;"
-                        onchange="handleFileUpload(this)">
+                        <div style="margin-top:12px;">
+                            <label>Bairro</label>
+                            <input class="input" name="neighborhood" id="empNeighborhood">
+                        </div>
+
+                        <div style="display:flex; gap:12px; margin-top:32px;">
+                            <button type="button" class="btn secondary" style="flex:1;"
+                                onclick="closeModal()">Cancelar</button>
+                            <button type="submit" class="btn" style="flex:1;">Salvar</button>
+                        </div>
+
+                        <div id="deleteBtnContainer" style="margin-top:16px; text-align:center; display:none;">
+                            <a href="#" id="deleteLink" class="btn secondary"
+                                style="color:var(--danger); border-color:var(--danger-bg); width:100%;">Excluir
+                                Funcionário</a>
+                        </div>
+                    </form>
                 </div>
+            </div>
 
-                <label>Nome Completo</label>
-                <input class="input" name="name" id="empName" required>
+            <script>
+                const modalBg = document.getElementById("modal");
+                const modalTitle = document.getElementById("modalTitle");
+                const formAction = document.getElementById("formAction");
+                const empId = document.getElementById("empId");
+                const empName = document.getElementById("empName");
+                const empRole = document.getElementById("empRole");
+                const loginFields = document.getElementById("loginFields");
 
-                <label>Cargo</label>
-                <input class="input" name="role" id="empRole" required>
+                const empCep = document.getElementById("empCep");
+                const empCity = document.getElementById("empCity");
+                const empUf = document.getElementById("empUf");
+                const empStreet = document.getElementById("empStreet");
+                const empNeighborhood = document.getElementById("empNeighborhood");
+                const preview = document.getElementById("preview");
+                const selectedPhotoInput = document.getElementById("selectedPhoto");
+                const photoInput = document.getElementById("photoInput");
 
-                <!-- Campos de Login (Obrigatório para criação) -->
-                <div id="loginFields">
-                    <hr style="margin:24px 0; border:0; border-top:1px solid var(--border);">
-                    <p style="font-size:0.95rem; font-weight:600; margin-bottom:16px; color:var(--brand);">Dados de
-                        Acesso (Obrigatório)</p>
+                const deleteBtnContainer = document.getElementById("deleteBtnContainer");
+                const deleteLink = document.getElementById("deleteLink");
 
-                    <label>Nível de Acesso</label>
-                    <select class="select" name="access_level" id="empAccessLevel">
-                        <option value="user">Usuário Comum</option>
-                        <option value="admin">Administrador</option>
-                    </select>
+                function selectGalleryPhoto(path, element) {
+                    // Atualiza preview
+                    preview.src = "../" + path;
+                    // Define valor no input hidden
+                    selectedPhotoInput.value = path;
+                    // Limpa input file
+                    photoInput.value = "";
 
-                    <label>E-mail</label>
-                    <input class="input" name="email" id="empEmail" type="email" required>
-                    <label>Senha</label>
-                    <input class="input" name="password" id="empPassword" type="password" required>
-                </div>
+                    // Visual selection
+                    document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
+                    element.classList.add('selected');
+                }
 
-                <hr style="margin:24px 0; border:0; border-top:1px solid var(--border);">
+                function handleFileUpload(input) {
+                    if (input.files && input.files[0]) {
+                        preview.src = window.URL.createObjectURL(input.files[0]);
+                        // Limpa seleção da galeria
+                        selectedPhotoInput.value = "";
+                        document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
+                    }
+                }
 
-                <!-- Endereço -->
-                <div style="display:flex; gap:12px; align-items:flex-end;">
-                    <div style="flex:1;">
-                        <label>CEP</label>
-                        <input class="input" name="cep" id="empCep" onblur="buscarCEP()">
-                    </div>
-                    <button type="button" class="btn secondary" onclick="buscarCEP()"
-                        style="width:auto; margin-bottom:2px; height: 50px;"><i class="ri-search-line"></i></button>
-                </div>
+                function openCreateModal() {
+                    modalTitle.textContent = "Novo Funcionário";
+                    formAction.value = "create";
+                    empId.value = "";
+                    empName.value = "";
+                    empRole.value = "";
 
-                <div style="display:flex; gap:12px; margin-top:12px;">
-                    <div style="flex:2;">
-                        <label>Cidade</label>
-                        <input class="input" name="city" id="empCity">
-                    </div>
-                    <div style="flex:1;">
-                        <label>UF</label>
-                        <input class="input" name="uf" id="empUf">
-                    </div>
-                </div>
+                    // Limpar endereço
+                    empCep.value = "";
+                    empCity.value = "";
+                    empUf.value = "";
+                    empStreet.value = "";
+                    empNeighborhood.value = "";
 
-                <div style="margin-top:12px;">
-                    <label>Rua</label>
-                    <input class="input" name="street" id="empStreet">
-                </div>
+                    // Resetar foto
+                    preview.src = "../assets/uploads/profile_photos/avatar-default.png";
+                    selectedPhotoInput.value = "";
+                    photoInput.value = "";
+                    document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
 
-                <div style="margin-top:12px;">
-                    <label>Bairro</label>
-                    <input class="input" name="neighborhood" id="empNeighborhood">
-                </div>
+                    // Mostrar campos de login e tornar obrigatórios
+                    loginFields.style.display = "block";
+                    document.getElementById("empEmail").required = true;
+                    document.getElementById("empPassword").required = true;
 
-                <div style="display:flex; gap:12px; margin-top:32px;">
-                    <button type="button" class="btn secondary" style="flex:1;" onclick="closeModal()">Cancelar</button>
-                    <button type="submit" class="btn" style="flex:1;">Salvar</button>
-                </div>
+                    deleteBtnContainer.style.display = "none";
+                    modalBg.style.display = "flex";
+                }
 
-                <div id="deleteBtnContainer" style="margin-top:16px; text-align:center; display:none;">
-                    <a href="#" id="deleteLink" class="btn secondary"
-                        style="color:var(--danger); border-color:var(--danger-bg); width:100%;">Excluir Funcionário</a>
-                </div>
-            </form>
+                function editEmployee(data) {
+                    modalTitle.textContent = "Editar Funcionário";
+                    formAction.value = "update";
+                    empId.value = data.id;
+                    empName.value = data.name;
+                    empRole.value = data.role;
+
+                    empCep.value = data.cep || "";
+                    empCity.value = data.city || "";
+                    empUf.value = data.uf || "";
+                    empStreet.value = data.street || "";
+                    empNeighborhood.value = data.neighborhood || "";
+
+                    // Foto
+                    selectedPhotoInput.value = "";
+                    photoInput.value = "";
+                    document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
+
+                    if (data.photo) {
+                        if (data.photo.startsWith('assets/')) {
+                            preview.src = "../" + data.photo;
+                            // Tenta marcar na galeria se for um dos padrões
+                            const galleryItem = document.querySelector(`.gallery-item[onclick*='${data.photo}']`);
+                            if (galleryItem) galleryItem.classList.add('selected');
+                            selectedPhotoInput.value = data.photo;
+                        } else {
+                            preview.src = "../assets/uploads/funcionarios/" + data.photo;
+                        }
+                    } else {
+                        preview.src = "../assets/uploads/profile_photos/avatar-default.png";
+                    }
+
+                    // Esconder campos de login e remover obrigatoriedade
+                    loginFields.style.display = "none";
+                    document.getElementById("empEmail").required = false;
+                    document.getElementById("empPassword").required = false;
+
+                    // Configurar botão de excluir
+                    deleteLink.href = "?delete=" + data.id;
+                    deleteLink.onclick = function (e) {
+                        if (!confirm('Tem certeza que deseja excluir este funcionário?')) {
+                            e.preventDefault();
+                        }
+                    };
+                    deleteBtnContainer.style.display = "block";
+
+                    modalBg.style.display = "flex";
+                }
+
+                function closeModal() {
+                    modalBg.style.display = "none";
+                }
+
+                window.addEventListener("click", function (e) {
+                    if (e.target === modalBg) {
+                        closeModal();
+                    }
+                });
+            </script>
+
         </div>
     </div>
-
-    <script>
-        const modalBg = document.getElementById("modal");
-        const modalTitle = document.getElementById("modalTitle");
-        const formAction = document.getElementById("formAction");
-        const empId = document.getElementById("empId");
-        const empName = document.getElementById("empName");
-        const empRole = document.getElementById("empRole");
-        const loginFields = document.getElementById("loginFields");
-
-        const empCep = document.getElementById("empCep");
-        const empCity = document.getElementById("empCity");
-        const empUf = document.getElementById("empUf");
-        const empStreet = document.getElementById("empStreet");
-        const empNeighborhood = document.getElementById("empNeighborhood");
-        const preview = document.getElementById("preview");
-        const selectedPhotoInput = document.getElementById("selectedPhoto");
-        const photoInput = document.getElementById("photoInput");
-
-        const deleteBtnContainer = document.getElementById("deleteBtnContainer");
-        const deleteLink = document.getElementById("deleteLink");
-
-        function selectGalleryPhoto(path, element) {
-            // Atualiza preview
-            preview.src = "../" + path;
-            // Define valor no input hidden
-            selectedPhotoInput.value = path;
-            // Limpa input file
-            photoInput.value = "";
-
-            // Visual selection
-            document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
-            element.classList.add('selected');
-        }
-
-        function handleFileUpload(input) {
-            if (input.files && input.files[0]) {
-                preview.src = window.URL.createObjectURL(input.files[0]);
-                // Limpa seleção da galeria
-                selectedPhotoInput.value = "";
-                document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
-            }
-        }
-
-        function openCreateModal() {
-            modalTitle.textContent = "Novo Funcionário";
-            formAction.value = "create";
-            empId.value = "";
-            empName.value = "";
-            empRole.value = "";
-
-            // Limpar endereço
-            empCep.value = "";
-            empCity.value = "";
-            empUf.value = "";
-            empStreet.value = "";
-            empNeighborhood.value = "";
-
-            // Resetar foto
-            preview.src = "../assets/uploads/profile_photos/avatar-default.png";
-            selectedPhotoInput.value = "";
-            photoInput.value = "";
-            document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
-
-            // Mostrar campos de login e tornar obrigatórios
-            loginFields.style.display = "block";
-            document.getElementById("empEmail").required = true;
-            document.getElementById("empPassword").required = true;
-
-            deleteBtnContainer.style.display = "none";
-            modalBg.style.display = "flex";
-        }
-
-        function editEmployee(data) {
-            modalTitle.textContent = "Editar Funcionário";
-            formAction.value = "update";
-            empId.value = data.id;
-            empName.value = data.name;
-            empRole.value = data.role;
-
-            empCep.value = data.cep || "";
-            empCity.value = data.city || "";
-            empUf.value = data.uf || "";
-            empStreet.value = data.street || "";
-            empNeighborhood.value = data.neighborhood || "";
-
-            // Foto
-            selectedPhotoInput.value = "";
-            photoInput.value = "";
-            document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
-
-            if (data.photo) {
-                if (data.photo.startsWith('assets/')) {
-                    preview.src = "../" + data.photo;
-                    // Tenta marcar na galeria se for um dos padrões
-                    const galleryItem = document.querySelector(`.gallery-item[onclick*='${data.photo}']`);
-                    if (galleryItem) galleryItem.classList.add('selected');
-                    selectedPhotoInput.value = data.photo;
-                } else {
-                    preview.src = "../assets/uploads/funcionarios/" + data.photo;
-                }
-            } else {
-                preview.src = "../assets/uploads/profile_photos/avatar-default.png";
-            }
-
-            // Esconder campos de login e remover obrigatoriedade
-            loginFields.style.display = "none";
-            document.getElementById("empEmail").required = false;
-            document.getElementById("empPassword").required = false;
-
-            // Configurar botão de excluir
-            deleteLink.href = "?delete=" + data.id;
-            deleteLink.onclick = function (e) {
-                if (!confirm('Tem certeza que deseja excluir este funcionário?')) {
-                    e.preventDefault();
-                }
-            };
-            deleteBtnContainer.style.display = "block";
-
-            modalBg.style.display = "flex";
-        }
-
-        function closeModal() {
-            modalBg.style.display = "none";
-        }
-
-        window.addEventListener("click", function (e) {
-            if (e.target === modalBg) {
-                closeModal();
-            }
-        });
-    </script>
-
-    <?php include '_partials/bottom_nav.php'; ?>
 
 </body>
 

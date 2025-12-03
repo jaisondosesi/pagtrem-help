@@ -33,70 +33,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 
-  <div class="top-header">
-    <h1><i class="ri-notification-3-line"></i> Avisos</h1>
-  </div>
+  <div class="layout-wrapper">
+    <?php include '_partials/sidebar_admin.php'; ?>
 
-  <div class="container" style="padding-bottom: 100px;">
-
-    <?php if ($success_msg): ?>
-      <div class="badge success" style="margin-bottom: 24px; width: 100%; justify-content: center; padding: 12px;">
-        <?php echo $success_msg; ?>
+    <div class="main-content">
+      <div class="top-header">
+        <h1><i class="ri-notification-3-line"></i> Avisos</h1>
       </div>
-    <?php endif; ?>
 
-    <div class="card" style="margin-bottom: 32px;">
-      <h2 style="margin-bottom: 16px;">Criar Novo Aviso</h2>
-      <form method="post">
-        <label>Título</label>
-        <input class="input" name="title" placeholder="Título do aviso" required>
+      <div class="container">
 
-        <label>Categoria</label>
-        <select class="select" name="tag">
-          <option>Manutenção</option>
-          <option>Novidades</option>
-          <option selected>Sistema</option>
-        </select>
+        <?php if ($success_msg): ?>
+          <div class="badge success" style="margin-bottom: 24px; width: 100%; justify-content: center; padding: 12px;">
+            <?php echo $success_msg; ?>
+          </div>
+        <?php endif; ?>
 
-        <label>Mensagem</label>
-        <textarea class="textarea" name="body" rows="4" placeholder="Escreva o aviso..." required></textarea>
+        <div class="card" style="margin-bottom: 32px;">
+          <h2 style="margin-bottom: 16px;">Criar Novo Aviso</h2>
+          <form method="post">
+            <label>Título</label>
+            <input class="input" name="title" placeholder="Título do aviso" required>
 
-        <button class="btn" style="margin-top:24px; width:100%;">Publicar Aviso</button>
-      </form>
+            <label>Categoria</label>
+            <select class="select" name="tag">
+              <option>Manutenção</option>
+              <option>Novidades</option>
+              <option selected>Sistema</option>
+            </select>
+
+            <label>Mensagem</label>
+            <textarea class="textarea" name="body" rows="4" placeholder="Escreva o aviso..." required></textarea>
+
+            <button class="btn" style="margin-top:24px; width:100%;">Publicar Aviso</button>
+          </form>
+        </div>
+
+        <h3 style="margin-bottom: 16px; padding-left: 4px;">Histórico de Avisos</h3>
+
+        <div class="recent-section">
+          <?php
+          $res = $mysqli->query("SELECT * FROM notices ORDER BY id DESC");
+          if ($res->num_rows > 0) {
+            while ($n = $res->fetch_assoc()) {
+              $badge = match ($n['tag']) {
+                'Manutenção' => '<span class="badge red">Manutenção</span>',
+                'Novidades' => '<span class="badge blue">Novidades</span>',
+                default => '<span class="badge">Sistema</span>',
+              };
+
+              echo "
+              <div class='notice-card'>
+                <div class='notice-top'>
+                  <div class='notice-title'>" . htmlspecialchars($n['title']) . "</div>
+                  $badge
+                </div>
+                <div class='notice-body'>" . nl2br(htmlspecialchars($n['body'])) . "</div>
+                <div class='notice-date'>" . date('d/m/Y H:i', strtotime($n['created_at'])) . "</div>
+              </div>";
+            }
+          } else {
+            echo "<p class='text-muted' style='padding-left: 4px;'>Nenhum aviso registrado.</p>";
+          }
+          ?>
+        </div>
+
+      </div>
     </div>
-
-    <h3 style="margin-bottom: 16px; padding-left: 4px;">Histórico de Avisos</h3>
-
-    <div class="recent-section">
-      <?php
-      $res = $mysqli->query("SELECT * FROM notices ORDER BY id DESC");
-      if ($res->num_rows > 0) {
-        while ($n = $res->fetch_assoc()) {
-          $badge = match ($n['tag']) {
-            'Manutenção' => '<span class="badge red">Manutenção</span>',
-            'Novidades' => '<span class="badge blue">Novidades</span>',
-            default => '<span class="badge">Sistema</span>',
-          };
-
-          echo "
-          <div class='notice-card'>
-            <div class='notice-top'>
-              <div class='notice-title'>" . htmlspecialchars($n['title']) . "</div>
-              $badge
-            </div>
-            <div class='notice-body'>" . nl2br(htmlspecialchars($n['body'])) . "</div>
-            <div class='notice-date'>" . date('d/m/Y H:i', strtotime($n['created_at'])) . "</div>
-          </div>";
-        }
-      } else {
-        echo "<p class='text-muted' style='padding-left: 4px;'>Nenhum aviso registrado.</p>";
-      }
-      ?>
-    </div>
-
   </div>
-
-  <?php include '_partials/bottom_nav.php'; ?>
 
 </body>
 

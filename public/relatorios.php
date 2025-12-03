@@ -15,52 +15,58 @@ require_once('../assets/config/db.php');
 
 <body>
 
-  <!-- HEADER -->
-  <div class="top-header">
-    <h1><i class="ri-bar-chart-2-line"></i> Relatórios</h1>
-  </div>
+  <div class="layout-wrapper">
+    <?php include '_partials/sidebar_admin.php'; ?>
 
-  <div class="container" style="padding-bottom: 100px;">
-    <!-- KPI GRID -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <i class="ri-train-line"></i>
-        <div class="stat-value">185</div>
-        <div class="stat-label">Viagens/Mês</div>
+    <div class="main-content">
+      <!-- HEADER -->
+      <div class="top-header">
+        <h1><i class="ri-bar-chart-2-line"></i> Relatórios</h1>
       </div>
-      <div class="stat-card">
-        <i class="ri-time-line"></i>
-        <div class="stat-value">94%</div>
-        <div class="stat-label">Pontualidade</div>
-      </div>
-      <div class="stat-card">
-        <i class="ri-emotion-happy-line"></i>
-        <div class="stat-value">4.7</div>
-        <div class="stat-label">Satisfação</div>
-      </div>
-    </div>
 
-    <!-- CHARTS -->
-    <div class="chart-section" style="display: flex; flex-direction: column; gap: 24px; margin-top: 32px;">
-
-      <div class="card">
-        <div style="margin-bottom: 16px;">
-          <strong style="font-size: 1.1rem; display: block;">Passageiros e Viagens por Mês</strong>
-          <span class="text-muted" style="font-size: 0.9rem;">Últimos 6 meses</span>
+      <div class="container" style="padding-bottom: 100px;">
+        <!-- KPI GRID -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <i class="ri-train-line"></i>
+            <div class="stat-value">185</div>
+            <div class="stat-label">Viagens/Mês</div>
+          </div>
+          <div class="stat-card">
+            <i class="ri-time-line"></i>
+            <div class="stat-value">94%</div>
+            <div class="stat-label">Pontualidade</div>
+          </div>
+          <div class="stat-card">
+            <i class="ri-emotion-happy-line"></i>
+            <div class="stat-value">4.7</div>
+            <div class="stat-label">Satisfação</div>
+          </div>
         </div>
-        <canvas id="chartPassageiros"></canvas>
-      </div>
 
-      <div class="card">
-        <div style="margin-bottom: 16px;">
-          <strong style="font-size: 1.1rem; display: block;">Distribuição por Rota</strong>
-          <span class="text-muted" style="font-size: 0.9rem;">Percentual de uso</span>
-        </div>
-        <div style="max-width: 400px; margin: 0 auto;">
-          <canvas id="chartRotas"></canvas>
+        <!-- CHARTS -->
+        <div class="chart-section" style="display: flex; flex-direction: column; gap: 24px; margin-top: 32px;">
+
+          <div class="card">
+            <div style="margin-bottom: 16px;">
+              <strong style="font-size: 1.1rem; display: block;">Passageiros e Viagens por Mês</strong>
+              <span class="text-muted" style="font-size: 0.9rem;">Últimos 6 meses</span>
+            </div>
+            <canvas id="chartPassageiros"></canvas>
+          </div>
+
+          <div class="card">
+            <div style="margin-bottom: 16px;">
+              <strong style="font-size: 1.1rem; display: block;">Distribuição por Rota</strong>
+              <span class="text-muted" style="font-size: 0.9rem;">Percentual de uso</span>
+            </div>
+            <div style="max-width: 400px; margin: 0 auto;">
+              <canvas id="chartRotas"></canvas>
+            </div>
+          </div>
+
         </div>
       </div>
-
     </div>
   </div>
 
@@ -141,9 +147,6 @@ require_once('../assets/config/db.php');
       }
     });
   </script>
-
-  <!-- NAV MOBILE -->
-  <?php include '_partials/bottom_nav.php'; ?>
 
 </body>
 
