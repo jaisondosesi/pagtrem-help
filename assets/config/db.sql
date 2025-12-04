@@ -84,7 +84,7 @@ INSERT INTO users (name, email, password, role, avatar)
 VALUES
 ('Administrador', 'admin@pagtrem.com',
   '$2y$10$jXMvLkH8bsM1E7e8qcWjj.KVsSXNFxyCG3raoycw2O66OvtlCz9jO', 'admin', NULL),
-('Cliente de Teste', 'usuario@pagtrem.com',
+('Usuário de Teste', 'usuario@pagtrem.com',
   '$2y$10$jXMvLkH8bsM1E7e8qcWjj.KVsSXNFxyCG3raoycw2O66OvtlCz9jO', 'user', NULL);
 
 INSERT IGNORE INTO stations (name, city, state, cep) VALUES
@@ -206,7 +206,7 @@ CREATE TABLE chat_messages (
 
 INSERT INTO users (name,email,password,role) VALUES
 ('Administrador','admin@pagtrem.com','$2y$10$jXMvLkH8bsM1E7e8qcWjj.KVsSXNFxyCG3raoycw2O66OvtlCz9jO','admin'),
-('Cliente de Teste','usuario@pagtrem.com','$2y$10$jXMvLkH8bsM1E7e8qcWjj.KVsSXNFxyCG3raoycw2O66OvtlCz9jO','user');
+('Usuário de Teste','usuario@pagtrem.com','$2y$10$jXMvLkH8bsM1E7e8qcWjj.KVsSXNFxyCG3raoycw2O66OvtlCz9jO','user');
 
 
 CREATE TABLE employees (
