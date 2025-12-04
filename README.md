@@ -82,8 +82,8 @@ O banco de dados já vem populado com usuários de teste para facilitar o desenv
 
 | Perfil | E-mail | Senha |
 | :--- | :--- | :--- |
-| **Administrador** | `admin@pagtrem.com` | `123` |
-| **Usuário** | `usuario@pagtrem.com` | `123` |
+| **Administrador** | `admin@pagtrem.com` | `1234` |
+| **Usuário** | `usuario@pagtrem.com` | `1234` |
 
 > **Nota**: As senhas são criptografadas no banco de dados.
 
