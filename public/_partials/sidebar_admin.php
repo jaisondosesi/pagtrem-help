@@ -23,10 +23,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <i class="ri-group-line"></i>
             <span>Funcionários</span>
         </a>
-        <a href="relatorios.php" class="<?php echo $current_page == 'relatorios.php' ? 'active' : ''; ?>">
-            <i class="ri-bar-chart-2-line"></i>
-            <span>Relatórios</span>
-        </a>
         <a href="meu_perfil.php" class="<?php echo $current_page == 'meu_perfil.php' ? 'active' : ''; ?>">
             <i class="ri-user-settings-line"></i>
             <span>Perfil</span>
