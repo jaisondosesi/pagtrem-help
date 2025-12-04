@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'role' => $row['role'],
             'avatar' => $row['avatar']
           ];
-          header('Location: cliente_home.php');
+          header('Location: usuario_home.php');
           exit;
         }
 
@@ -69,7 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php if ($error): ?>
       <div class="badge red" style="margin-bottom: 16px; width: 100%; justify-content: center; padding: 8px;">
-        <?php echo htmlspecialchars($error); ?></div>
+        <?php echo htmlspecialchars($error); ?>
+      </div>
     <?php endif; ?>
 
     <form method="post">

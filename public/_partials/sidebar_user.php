@@ -7,11 +7,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <span>PagTrem</span>
     </div>
     <nav class="sidebar-nav">
-        <a href="cliente_home.php" class="<?php echo $current_page == 'cliente_home.php' ? 'active' : ''; ?>">
+        <a href="usuario_home.php" class="<?php echo $current_page == 'usuario_home.php' ? 'active' : ''; ?>">
             <i class="ri-map-pin-line"></i>
             <span>Rotas</span>
         </a>
-        <a href="perfil_cliente.php" class="<?php echo $current_page == 'perfil_cliente.php' ? 'active' : ''; ?>">
+        <a href="perfil_usuario.php" class="<?php echo $current_page == 'perfil_usuario.php' ? 'active' : ''; ?>">
             <i class="ri-user-smile-line"></i>
             <span>Perfil</span>
         </a>

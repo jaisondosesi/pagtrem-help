@@ -43,7 +43,7 @@ $me = $res->fetch_assoc();
 
 <head>
   <meta charset="utf-8">
-  <title>Editar Perfil - Cliente</title>
+  <title>Editar Perfil - Usuário</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="../assets/css/styles.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
@@ -102,7 +102,7 @@ $me = $res->fetch_assoc();
 
             <button class="btn" type="submit" style="width: 100%; margin-top: 24px;">Salvar Alterações</button>
 
-            <a href="perfil_cliente.php" class="btn secondary"
+            <a href="perfil_usuario.php" class="btn secondary"
               style="width: 100%; margin-top: 12px; justify-content: center; text-decoration: none;">Cancelar</a>
           </form>
         </div>

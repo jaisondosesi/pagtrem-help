@@ -14,7 +14,7 @@ if ($user['role'] !== 'user') {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Meu Perfil - Cliente</title>
+  <title>Meu Perfil - Usuário</title>
   <link href="../assets/css/styles.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
 
@@ -38,7 +38,7 @@ if ($user['role'] !== 'user') {
             <i class="ri-user-line"></i>
           </div>
           <h2 style="margin-bottom: 4px;"><?php echo htmlspecialchars($user['name']); ?></h2>
-          <p class="text-muted">Cliente PagTrem</p>
+          <p class="text-muted">Usuário PagTrem</p>
         </div>
 
         <div class="card">
@@ -58,10 +58,10 @@ if ($user['role'] !== 'user') {
 
           <div style="display: flex; justify-content: space-between; padding: 12px 0;">
             <span class="text-muted">Tipo de Conta</span>
-            <span class="badge blue">Cliente</span>
+            <span class="badge blue">Usuário</span>
           </div>
 
-          <a href="editar_perfil_cliente.php" class="btn secondary"
+          <a href="editar_perfil_usuario.php" class="btn secondary"
             style="width: 100%; margin-top: 24px; justify-content: center;">
             <i class="ri-pencil-line" style="margin-right: 8px;"></i> Editar Perfil
           </a>
