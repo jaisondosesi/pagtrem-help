@@ -32,17 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Nome da rota é composto
     $name = "$origin → $destination";
 
-    $stops = trim($_POST['stops'] ?? '');
     $extra_info = trim($_POST['extra_info'] ?? '');
     $status = $_POST['status'] ?? 'ativa';
 
     if ($action === 'create') {
-        $stmt = $mysqli->prepare("INSERT INTO routes (name, origin, destination, stops, duration_minutes, extra_info, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('ssssiss', $name, $origin, $destination, $stops, $duration_minutes, $extra_info, $status);
+        $stmt = $mysqli->prepare("INSERT INTO routes (name, origin, destination, duration_minutes, extra_info, status) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('ssssss', $name, $origin, $destination, $duration_minutes, $extra_info, $status);
         $stmt->execute();
     } elseif ($action === 'update' && $id) {
-        $stmt = $mysqli->prepare("UPDATE routes SET name=?, origin=?, destination=?, stops=?, duration_minutes=?, extra_info=?, status=? WHERE id=?");
-        $stmt->bind_param('ssssissi', $name, $origin, $destination, $stops, $duration_minutes, $extra_info, $status, $id);
+        $stmt = $mysqli->prepare("UPDATE routes SET name=?, origin=?, destination=?, duration_minutes=?, extra_info=?, status=? WHERE id=?");
+        $stmt->bind_param('ssssisi', $name, $origin, $destination, $duration_minutes, $extra_info, $status, $id);
         $stmt->execute();
     } elseif ($action === 'delete' && $id) {
         $stmt = $mysqli->prepare("DELETE FROM routes WHERE id=?");
@@ -110,10 +109,6 @@ if (isset($_GET['delete'])) {
 
                             <div class='details'>
                                 <div style='display:flex; align-items:center; gap:8px;'>
-                                    <i class='ri-map-pin-2-line' style='color:var(--brand);'></i>
-                                    <span>Paradas: " . htmlspecialchars($r['stops'] ?? '') . "</span>
-                                </div>
-                                <div style='display:flex; align-items:center; gap:8px;'>
                                     <i class='ri-time-line' style='color:var(--brand);'></i>
                                     <span>$durationFmt</span>
                                 </div>
@@ -155,9 +150,6 @@ if (isset($_GET['delete'])) {
                                     placeholder="Ex: Rio de Janeiro" required>
                             </div>
                         </div>
-
-                        <label>Paradas</label>
-                        <input class="input" name="stops" id="routeStops" placeholder="Separadas por vírgula" required>
 
                         <label>Duração</label>
                         <div style="display:flex; gap:12px; align-items:center;">
@@ -206,8 +198,6 @@ if (isset($_GET['delete'])) {
                 const routeOrigin = document.getElementById("routeOrigin");
                 const routeDestination = document.getElementById("routeDestination");
 
-                const routeStops = document.getElementById("routeStops");
-
                 const routeHours = document.getElementById("routeHours");
                 const routeMinutes = document.getElementById("routeMinutes");
 
@@ -223,8 +213,6 @@ if (isset($_GET['delete'])) {
 
                     routeOrigin.value = "";
                     routeDestination.value = "";
-
-                    routeStops.value = "";
 
                     routeHours.value = "";
                     routeMinutes.value = "";
@@ -255,8 +243,6 @@ if (isset($_GET['delete'])) {
                             routeDestination.value = "";
                         }
                     }
-
-                    routeStops.value = data.stops || "";
 
                     // Converter minutos para horas e minutos
                     let totalMin = parseInt(data.duration_minutes) || 0;

@@ -67,10 +67,6 @@ function formatDuration($minutes)
                 </div>
                 <div class='details'>
                   <div style='display:flex; align-items:center; gap:8px;'>
-                    <i class='ri-map-pin-2-line' style='color:var(--brand);'></i>
-                    <span>Paradas: " . htmlspecialchars($r['stops'] ?? 'Direto') . "</span>
-                  </div>
-                  <div style='display:flex; align-items:center; gap:8px;'>
                     <i class='ri-time-line' style='color:var(--brand);'></i>
                     <span>$durationFmt</span>
                   </div>

@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS routes (
   name VARCHAR(200) NOT NULL,
   origin VARCHAR(100),
   destination VARCHAR(100),
-  stops TEXT,
+
   duration_minutes INT DEFAULT NULL,
   extra_info TEXT,
   status ENUM('ativa','manutencao') NOT NULL DEFAULT 'ativa',
@@ -96,11 +96,11 @@ INSERT IGNORE INTO stations (name, city, state, cep) VALUES
 ('Ponte Rio Grande','Sorocaba','SP','18010-000');
 
 
-INSERT IGNORE INTO routes (name, origin, destination, stops, duration_minutes, extra_info, status) VALUES
-('São Paulo → Rio de Janeiro', 'São Paulo', 'Rio de Janeiro', 'São José dos Campos, Aparecida, Resende', 390, 'Wi-Fi disponível', 'ativa'),
-('Campinas → Santos', 'Campinas', 'Santos', 'Jundiaí, São Paulo (Luz)', 225, NULL, 'ativa'),
-('Belo Horizonte → São Paulo', 'Belo Horizonte', 'São Paulo', 'Divinópolis, Varginha', 495, 'Manutenção na via', 'manutencao'),
-('Curitiba → Florianópolis', 'Curitiba', 'Florianópolis', 'Joinville, Itajaí', 320, 'Vista panorâmica', 'ativa');
+INSERT IGNORE INTO routes (name, origin, destination, duration_minutes, extra_info, status) VALUES
+('São Paulo → Rio de Janeiro', 'São Paulo', 'Rio de Janeiro', 390, 'Wi-Fi disponível', 'ativa'),
+('Campinas → Santos', 'Campinas', 'Santos', 225, NULL, 'ativa'),
+('Belo Horizonte → São Paulo', 'Belo Horizonte', 'São Paulo', 495, 'Manutenção na via', 'manutencao'),
+('Curitiba → Florianópolis', 'Curitiba', 'Florianópolis', 320, 'Vista panorâmica', 'ativa');
 
 
 INSERT IGNORE INTO route_stations (route_id, station_id, stop_order) VALUES
@@ -163,7 +163,7 @@ CREATE TABLE routes (
   name VARCHAR(200) NOT NULL,
   origin VARCHAR(100),
   destination VARCHAR(100),
-  stops TEXT,
+
   duration_minutes INT DEFAULT NULL,
   extra_info TEXT,
   status ENUM('ativa','manutencao') DEFAULT 'ativa',
@@ -230,11 +230,11 @@ INSERT INTO employees (name, role, phone, cep, street, neighborhood, city, uf, p
 ('Fernanda Lima', 'Atendente', '(31) 98765-1234', '30130-000', 'Av. Afonso Pena, 500', 'Centro', 'Belo Horizonte', 'MG', NULL),
 ('João Pereira', 'Manutenção', '(41) 91234-8765', '80020-000', 'Rua XV de Novembro, 200', 'Centro', 'Curitiba', 'PR', NULL);
 
-INSERT INTO routes (name, origin, destination, stops, duration_minutes, extra_info, status) VALUES
-('Expresso Leste', 'São Paulo (Luz)', 'Guaianases', 'Tatuapé, Itaquera', 45, 'Alta demanda', 'ativa'),
-('Linha Turística da Serra', 'Campos do Jordão', 'Santo Antônio do Pinhal', 'Mirante', 120, 'Guia turístico incluso', 'manutencao'),
-('Intercidades Campinas-SP', 'Campinas', 'São Paulo (Barra Funda)', 'Jundiaí', 60, 'Serviço expresso', 'ativa'),
-('Conexão Aeroporto', 'São Paulo (Luz)', 'Aeroporto Guarulhos', 'Guarulhos-Cecap', 30, 'Saídas a cada 15min', 'ativa');
+INSERT INTO routes (name, origin, destination, duration_minutes, extra_info, status) VALUES
+('Expresso Leste', 'São Paulo (Luz)', 'Guaianases', 45, 'Alta demanda', 'ativa'),
+('Linha Turística da Serra', 'Campos do Jordão', 'Santo Antônio do Pinhal', 120, 'Guia turístico incluso', 'manutencao'),
+('Intercidades Campinas-SP', 'Campinas', 'São Paulo (Barra Funda)', 60, 'Serviço expresso', 'ativa'),
+('Conexão Aeroporto', 'São Paulo (Luz)', 'Aeroporto Guarulhos', 30, 'Saídas a cada 15min', 'ativa');
 
 INSERT INTO notices (title, body, tag) VALUES
 ('Atrasos na Linha 1', 'Devido a chuvas fortes, a Linha 1 opera com velocidade reduzida.', 'Sistema'),
