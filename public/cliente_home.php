@@ -1,6 +1,21 @@
 <?php
 require_once('../assets/config/auth.php');
+require_once('../assets/config/db.php');
+
 $user = $_SESSION['user'] ?? null;
+
+// Helper para formatar duração
+function formatDuration($minutes)
+{
+  if (!$minutes)
+    return '0min';
+  $hours = floor($minutes / 60);
+  $mins = $minutes % 60;
+  if ($hours > 0) {
+    return "{$hours}h {$mins}min";
+  }
+  return "{$mins}min";
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -36,91 +51,49 @@ $user = $_SESSION['user'] ?? null;
         <h3 style="margin-bottom: 16px; padding-left: 4px;">Rotas Disponíveis</h3>
 
         <div class="route-list">
+          <?php
+          $res = $mysqli->query("SELECT * FROM routes ORDER BY id DESC");
+          if ($res->num_rows > 0) {
+            while ($r = $res->fetch_assoc()) {
+              $badgeClass = ($r['status'] === 'manutencao') ? 'red' : 'blue';
+              $badgeText = ($r['status'] === 'manutencao') ? 'Manutenção' : 'Ativa';
+              $durationFmt = formatDuration($r['duration_minutes']);
 
-          <div class="route-card">
-            <div class="route-title">
-              <span>São Paulo → Rio de Janeiro</span>
-              <span class="badge blue">Ativa</span>
-            </div>
-            <div class="details">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <i class="ri-map-pin-2-line" style="color:var(--brand);"></i>
-                <span>Estações: Central • Norte • Sul</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <i class="ri-time-line" style="color:var(--brand);"></i>
-                <span>6h 30min</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <i class="ri-calendar-line" style="color:var(--brand);"></i>
-                <span>Opera diariamente</span>
-              </div>
-            </div>
-          </div>
+              echo "
+              <div class='route-card'>
+                <div class='route-title'>
+                  <span>" . htmlspecialchars($r['name']) . "</span>
+                  <span class='badge $badgeClass'>$badgeText</span>
+                </div>
+                <div class='details'>
+                  <div style='display:flex; align-items:center; gap:8px;'>
+                    <i class='ri-map-pin-2-line' style='color:var(--brand);'></i>
+                    <span>Paradas: " . htmlspecialchars($r['stops'] ?? 'Direto') . "</span>
+                  </div>
+                  <div style='display:flex; align-items:center; gap:8px;'>
+                    <i class='ri-time-line' style='color:var(--brand);'></i>
+                    <span>$durationFmt</span>
+                  </div>
+                  <div style='display:flex; align-items:center; gap:8px;'>
+                    <i class='ri-calendar-line' style='color:var(--brand);'></i>
+                    <span>Opera diariamente</span>
+                  </div>
+                </div>";
 
-          <div class="route-card">
-            <div class="route-title">
-              <span>Campinas → Santos</span>
-              <span class="badge blue">Ativa</span>
-            </div>
-            <div class="details">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <i class="ri-map-pin-2-line" style="color:var(--brand);"></i>
-                <span>KM 45 • Ponte Rio Grande</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <i class="ri-time-line" style="color:var(--brand);"></i>
-                <span>3h 45min</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <i class="ri-calendar-line" style="color:var(--brand);"></i>
-                <span>Opera diariamente</span>
-              </div>
-            </div>
-          </div>
+              if (!empty($r['extra_info'])) {
+                echo "
+                <div class='live-info'>
+                  <i class='ri-notification-3-line' style='font-size:18px; color:var(--text-light);'></i>
+                  <span>" . htmlspecialchars($r['extra_info']) . "</span>
+                </div>";
+              }
 
-          <div class="route-card">
-            <div class="route-title">
-              <span>Belo Horizonte → São Paulo</span>
-              <span class="badge red">Manutenção</span>
-            </div>
-            <div class="details">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <i class="ri-map-pin-2-line" style="color:var(--brand);"></i>
-                <span>Estação Sul • Estação Central</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <i class="ri-time-line" style="color:var(--brand);"></i>
-                <span>8h 15min</span>
-              </div>
-            </div>
-            <div class="live-info">
-              <i class="ri-notification-3-line" style="font-size:18px; color:var(--text-light);"></i>
-              <span>Retorno previsto: 15/11</span>
-            </div>
-          </div>
-
-          <div class="route-card">
-            <div class="route-title">
-              <span>Curitiba → Florianópolis</span>
-              <span class="badge blue">Ativa</span>
-            </div>
-            <div class="details">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <i class="ri-map-pin-2-line" style="color:var(--brand);"></i>
-                <span>Estação Norte • Ponte Rio Grande</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <i class="ri-time-line" style="color:var(--brand);"></i>
-                <span>5h 20min</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <i class="ri-calendar-line" style="color:var(--brand);"></i>
-                <span>Opera diariamente</span>
-              </div>
-            </div>
-          </div>
-
+              echo "</div>";
+            }
+          } else {
+            echo "<p class='text-muted' style='grid-column: 1/-1; text-align: center;'>Nenhuma rota disponível no momento.</p>";
+          }
+          ?>
         </div>
       </div>
     </div>
