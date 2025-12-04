@@ -22,41 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = trim($_POST['password'] ?? '');
     $access_level = trim($_POST['access_level'] ?? 'user');
 
-    // FOTO
+    // FOTO removida
     $photo = null;
-
-    // 1. Verifica se veio upload
-    if (!empty($_FILES['photo']['name'])) {
-        if ($_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-            $ext = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
-            $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-
-            if (in_array($ext, $allowed)) {
-                $fname = 'f_' . time() . '_' . rand(1000, 9999) . '.' . $ext;
-                $dest = '../assets/uploads/funcionarios/' . $fname;
-
-                // Garantir que a pasta existe
-                $dir = dirname($dest);
-                if (!is_dir($dir)) {
-                    mkdir($dir, 0777, true);
-                }
-
-                if (move_uploaded_file($_FILES['photo']['tmp_name'], $dest)) {
-                    $photo = $fname;
-                } else {
-                    $feedback = "Erro ao mover arquivo de upload.";
-                }
-            } else {
-                $feedback = "Formato de imagem inválido. Use JPG, PNG, GIF ou WEBP.";
-            }
-        } else {
-            $feedback = "Erro no upload: Código " . $_FILES['photo']['error'];
-        }
-    }
-    // 2. Verifica se selecionou da galeria (se não houve upload)
-    elseif (!empty($_POST['selected_photo'])) {
-        $photo = $_POST['selected_photo'];
-    }
 
     if ($action === 'create') {
         // Validação de campos obrigatórios para login
@@ -88,12 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "UPDATE employees SET name=?, role=?, cep=?, street=?, neighborhood=?, city=?, uf=?";
         $params = [$name, $role, $cep, $street, $neighborhood, $city, $uf];
         $types = "sssssss";
-
-        if ($photo) {
-            $sql .= ", photo=?";
-            $params[] = $photo;
-            $types .= "s";
-        }
 
         $sql .= " WHERE id=?";
         $params[] = $id;
@@ -136,39 +97,6 @@ if (isset($_GET['delete'])) {
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
     <link href="../assets/css/styles.css" rel="stylesheet">
 
-    <style>
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .gallery-item {
-            cursor: pointer;
-            border: 2px solid transparent;
-            border-radius: 50%;
-            padding: 2px;
-            transition: all 0.2s;
-        }
-
-        .gallery-item:hover {
-            transform: scale(1.1);
-        }
-
-        .gallery-item.selected {
-            border-color: var(--brand);
-            transform: scale(1.1);
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: auto;
-            border-radius: 50%;
-            display: block;
-        }
-    </style>
-
     <script>
         async function buscarCEP() {
             const cep = document.getElementById("empCep").value.replace(/\D/g, '');
@@ -210,37 +138,25 @@ if (isset($_GET['delete'])) {
             <div class="container" style="padding-bottom: 120px;">
 
                 <?php if ($feedback): ?>
-                    <div class="badge success"
-                        style="margin-bottom: 24px; width: 100%; justify-content: center; padding: 12px;">
-                        <?php echo $feedback; ?>
-                    </div>
+                        <div class="badge success"
+                            style="margin-bottom: 24px; width: 100%; justify-content: center; padding: 12px;">
+                            <?php echo $feedback; ?>
+                        </div>
                 <?php endif; ?>
 
                 <div class="route-list">
                     <?php
                     $res = $mysqli->query("SELECT * FROM employees ORDER BY id DESC");
                     while ($f = $res->fetch_assoc()) {
-                        // Lógica de exibição da foto:
-                        // 1. Se começar com "assets/", é caminho relativo direto (galeria)
-                        // 2. Se não, assume que está em uploads/funcionarios/
-                        // 3. Fallback
-                    
-                        $photoVal = $f['photo'];
-                        if ($photoVal && strpos($photoVal, 'assets/') === 0) {
-                            $photoPath = '../' . $photoVal; // Ajuste pois estamos em public/
-                        } elseif ($photoVal) {
-                            $photoPath = '../assets/uploads/funcionarios/' . $photoVal;
-                        } else {
-                            $photoPath = '../assets/uploads/profile_photos/avatar-default.png';
-                        }
-
                         // Dados para JS
                         $jsonData = htmlspecialchars(json_encode($f), ENT_QUOTES, 'UTF-8');
 
                         echo "
                         <div class='route-card' onclick='editEmployee($jsonData)'>
                             <div style='display:flex; gap:16px; align-items:center;'>
-                                <img src='$photoPath' style='width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--surface); box-shadow: var(--shadow-sm);'>
+                                <div style='width:64px; height:64px; background:var(--brand-bg); color:var(--brand); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; border:1px solid var(--brand-light);'>
+                                    <i class='ri-user-line'></i>
+                                </div>
                                 <div>
                                     <div class='route-title' style='margin-bottom:4px; font-size: 1.1rem;'>" . htmlspecialchars($f['name']) . "</div>
                                     <div style='font-size:0.9rem; color:var(--text-light);'>" . htmlspecialchars($f['role']) . "</div>
@@ -265,54 +181,16 @@ if (isset($_GET['delete'])) {
             <div class="modal-bg" id="modal">
                 <div class="modal" onclick="event.stopPropagation()" style="max-height:90vh; overflow-y:auto;">
                     <h2 id="modalTitle" style="margin-bottom: 24px;">Novo Funcionário</h2>
-                    <form method="post" enctype="multipart/form-data">
+                    <form method="post">
                         <input type="hidden" name="action" id="formAction" value="create">
                         <input type="hidden" name="id" id="empId">
-                        <input type="hidden" name="selected_photo" id="selectedPhoto">
 
-                        <!-- Foto -->
+                        <!-- Foto removida -->
                         <div style="text-align:center; margin-bottom:24px;">
-                            <img id="preview" src="../assets/uploads/profile_photos/avatar-default.png"
-                                style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:4px solid var(--surface); box-shadow: var(--shadow); margin-bottom:16px;">
-                            <br>
-
-                            <!-- Opções de Foto -->
-                            <div style="margin-bottom:16px;">
-                                <span
-                                    style="font-size:0.875rem; color:var(--text-light); display:block; margin-bottom:8px;">Escolha
-                                    um avatar:</span>
-                                <div class="gallery-grid">
-                                    <div class="gallery-item"
-                                        onclick="selectGalleryPhoto('assets/images/funcionario1.png', this)">
-                                        <img src="../assets/images/funcionario1.png">
-                                    </div>
-                                    <div class="gallery-item"
-                                        onclick="selectGalleryPhoto('assets/images/funcionario2.png', this)">
-                                        <img src="../assets/images/funcionario2.png">
-                                    </div>
-                                    <div class="gallery-item"
-                                        onclick="selectGalleryPhoto('assets/images/funcionario3.png', this)">
-                                        <img src="../assets/images/funcionario3.png">
-                                    </div>
-                                    <div class="gallery-item"
-                                        onclick="selectGalleryPhoto('assets/images/funcionario4.png', this)">
-                                        <img src="../assets/images/funcionario4.png">
-                                    </div>
-                                    <div class="gallery-item"
-                                        onclick="selectGalleryPhoto('assets/images/funcionario5.png', this)">
-                                        <img src="../assets/images/funcionario5.png">
-                                    </div>
-                                </div>
+                            <div
+                                style="width:100px; height:100px; background:var(--brand-bg); color:var(--brand); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px; border:1px solid var(--brand-light); margin: 0 auto;">
+                                <i class="ri-user-line"></i>
                             </div>
-
-                            <div style="font-size:0.875rem; color:var(--text-light); margin:16px 0;">OU</div>
-
-                            <label for="photoInput" class="btn secondary"
-                                style="display:inline-block; width:auto; padding:8px 16px; font-size:0.875rem;">Upload
-                                do
-                                Computador</label>
-                            <input type="file" name="photo" id="photoInput" accept="image/*" style="display:none;"
-                                onchange="handleFileUpload(this)">
                         </div>
 
                         <label>Nome Completo</label>
@@ -403,34 +281,9 @@ if (isset($_GET['delete'])) {
                 const empUf = document.getElementById("empUf");
                 const empStreet = document.getElementById("empStreet");
                 const empNeighborhood = document.getElementById("empNeighborhood");
-                const preview = document.getElementById("preview");
-                const selectedPhotoInput = document.getElementById("selectedPhoto");
-                const photoInput = document.getElementById("photoInput");
 
                 const deleteBtnContainer = document.getElementById("deleteBtnContainer");
                 const deleteLink = document.getElementById("deleteLink");
-
-                function selectGalleryPhoto(path, element) {
-                    // Atualiza preview
-                    preview.src = "../" + path;
-                    // Define valor no input hidden
-                    selectedPhotoInput.value = path;
-                    // Limpa input file
-                    photoInput.value = "";
-
-                    // Visual selection
-                    document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
-                    element.classList.add('selected');
-                }
-
-                function handleFileUpload(input) {
-                    if (input.files && input.files[0]) {
-                        preview.src = window.URL.createObjectURL(input.files[0]);
-                        // Limpa seleção da galeria
-                        selectedPhotoInput.value = "";
-                        document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
-                    }
-                }
 
                 function openCreateModal() {
                     modalTitle.textContent = "Novo Funcionário";
@@ -445,12 +298,6 @@ if (isset($_GET['delete'])) {
                     empUf.value = "";
                     empStreet.value = "";
                     empNeighborhood.value = "";
-
-                    // Resetar foto
-                    preview.src = "../assets/uploads/profile_photos/avatar-default.png";
-                    selectedPhotoInput.value = "";
-                    photoInput.value = "";
-                    document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
 
                     // Mostrar campos de login e tornar obrigatórios
                     loginFields.style.display = "block";
@@ -473,25 +320,6 @@ if (isset($_GET['delete'])) {
                     empUf.value = data.uf || "";
                     empStreet.value = data.street || "";
                     empNeighborhood.value = data.neighborhood || "";
-
-                    // Foto
-                    selectedPhotoInput.value = "";
-                    photoInput.value = "";
-                    document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
-
-                    if (data.photo) {
-                        if (data.photo.startsWith('assets/')) {
-                            preview.src = "../" + data.photo;
-                            // Tenta marcar na galeria se for um dos padrões
-                            const galleryItem = document.querySelector(`.gallery-item[onclick*='${data.photo}']`);
-                            if (galleryItem) galleryItem.classList.add('selected');
-                            selectedPhotoInput.value = data.photo;
-                        } else {
-                            preview.src = "../assets/uploads/funcionarios/" + data.photo;
-                        }
-                    } else {
-                        preview.src = "../assets/uploads/profile_photos/avatar-default.png";
-                    }
 
                     // Esconder campos de login e remover obrigatoriedade
                     loginFields.style.display = "none";

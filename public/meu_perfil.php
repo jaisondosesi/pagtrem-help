@@ -11,52 +11,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $department = trim($_POST['department'] ?? '');
   $job = trim($_POST['job_title'] ?? '');
 
-  // Avatar
-  $avatarPath = $user['avatar'] ?? null;
-
-  // 1. Upload
-  if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
-    $ext = strtolower(pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION));
-    $fname = 'u' . $user['id'] . '_' . time() . '.' . $ext;
-    $dest = '../assets/uploads/profile_photos/' . $fname;
-
-    // Ensure directory exists
-    if (!is_dir(dirname($dest))) {
-      mkdir(dirname($dest), 0777, true);
-    }
-
-    if (move_uploaded_file($_FILES['avatar']['tmp_name'], $dest)) {
-      $avatarPath = $fname;
-    }
-  }
-  // 2. Galeria
-  elseif (!empty($_POST['selected_photo'])) {
-    $avatarPath = $_POST['selected_photo'];
-  }
-
+  // Avatar logic removed
   // Update
-  $stmt = $mysqli->prepare("UPDATE users SET name=?, phone=?, department=?, job_title=?, avatar=? WHERE id=?");
-  $stmt->bind_param('sssssi', $name, $phone, $department, $job, $avatarPath, $user['id']);
+  $stmt = $mysqli->prepare("UPDATE users SET name=?, phone=?, department=?, job_title=? WHERE id=?");
+  $stmt->bind_param('ssssi', $name, $phone, $department, $job, $user['id']);
 
   if ($stmt->execute()) {
     $_SESSION['user']['name'] = $name;
-    $_SESSION['user']['avatar'] = $avatarPath;
     $feedback = 'Perfil atualizado com sucesso!';
   }
 }
 
 $res = $mysqli->query("SELECT * FROM users WHERE id=" . $user['id']);
 $me = $res->fetch_assoc();
-
-// Determine current avatar URL for display
-$currentAvatar = $me['avatar'];
-if ($currentAvatar && strpos($currentAvatar, 'assets/') === 0) {
-  $displayAvatar = '../' . $currentAvatar;
-} elseif ($currentAvatar) {
-  $displayAvatar = '../assets/uploads/profile_photos/' . $currentAvatar;
-} else {
-  $displayAvatar = '../assets/uploads/profile_photos/avatar-default.png';
-}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -67,40 +34,6 @@ if ($currentAvatar && strpos($currentAvatar, 'assets/') === 0) {
   <title>Meu Perfil - PagTrem</title>
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
   <link href="../assets/css/styles.css" rel="stylesheet">
-
-  <style>
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
-      margin-top: 12px;
-      margin-bottom: 24px;
-    }
-
-    .gallery-item {
-      cursor: pointer;
-      border: 2px solid transparent;
-      border-radius: 50%;
-      padding: 2px;
-      transition: all 0.2s;
-    }
-
-    .gallery-item:hover {
-      transform: scale(1.1);
-    }
-
-    .gallery-item.selected {
-      border-color: var(--brand);
-      transform: scale(1.1);
-    }
-
-    .gallery-item img {
-      width: 100%;
-      height: auto;
-      border-radius: 50%;
-      display: block;
-    }
-  </style>
 </head>
 
 <body>
@@ -123,40 +56,12 @@ if ($currentAvatar && strpos($currentAvatar, 'assets/') === 0) {
         <?php endif; ?>
 
         <div class="card">
-          <form method="post" enctype="multipart/form-data">
-            <input type="hidden" name="selected_photo" id="selectedPhoto">
+          <form method="post">
 
             <div style="text-align:center; margin-bottom:24px;">
-              <img id="preview" src="<?php echo $displayAvatar; ?>"
-                style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:4px solid var(--surface); box-shadow: var(--shadow);">
-              <br>
-              <label for="photoInput" class="btn secondary"
-                style="display:inline-block; width:auto; padding:8px 16px; font-size:0.875rem; margin-top:16px;">Alterar
-                Foto</label>
-              <input type="file" name="avatar" id="photoInput" class="file-input" accept="image/*" style="display:none;"
-                onchange="handleFileUpload(this)">
-            </div>
-
-            <!-- Opções de Foto (Galeria) -->
-            <div style="margin-bottom:24px; text-align:center;">
-              <span style="font-size:0.875rem; color:var(--text-light); display:block; margin-bottom:8px;">Ou escolha um
-                avatar:</span>
-              <div class="gallery-grid">
-                <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario1.png', this)">
-                  <img src="../assets/images/funcionario1.png">
-                </div>
-                <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario2.png', this)">
-                  <img src="../assets/images/funcionario2.png">
-                </div>
-                <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario3.png', this)">
-                  <img src="../assets/images/funcionario3.png">
-                </div>
-                <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario4.png', this)">
-                  <img src="../assets/images/funcionario4.png">
-                </div>
-                <div class="gallery-item" onclick="selectGalleryPhoto('assets/images/funcionario5.png', this)">
-                  <img src="../assets/images/funcionario5.png">
-                </div>
+              <div
+                style="width:100px; height:100px; background:var(--brand-bg); color:var(--brand); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px; border:1px solid var(--brand-light); margin: 0 auto;">
+                <i class="ri-user-line"></i>
               </div>
             </div>
 
@@ -187,34 +92,6 @@ if ($currentAvatar && strpos($currentAvatar, 'assets/') === 0) {
       </div>
     </div>
   </div>
-
-  <script>
-    const preview = document.getElementById("preview");
-    const selectedPhotoInput = document.getElementById("selectedPhoto");
-    const photoInput = document.getElementById("photoInput");
-
-    function selectGalleryPhoto(path, element) {
-      // Atualiza preview
-      preview.src = "../" + path;
-      // Define valor no input hidden
-      selectedPhotoInput.value = path;
-      // Limpa input file
-      photoInput.value = "";
-
-      // Visual selection
-      document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
-      element.classList.add('selected');
-    }
-
-    function handleFileUpload(input) {
-      if (input.files && input.files[0]) {
-        preview.src = window.URL.createObjectURL(input.files[0]);
-        // Limpa seleção da galeria
-        selectedPhotoInput.value = "";
-        document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
-      }
-    }
-  </script>
 
 </body>
 
