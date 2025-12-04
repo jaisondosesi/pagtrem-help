@@ -22,8 +22,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = trim($_POST['password'] ?? '');
     $access_level = trim($_POST['access_level'] ?? 'user');
 
-    // FOTO removida
+    // FOTO
     $photo = null;
+
+    // 1. Verifica se veio upload
+    if (!empty($_FILES['photo']['name'])) {
+        if ($_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+            $ext = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+            if (in_array($ext, $allowed)) {
+                $fname = 'f_' . time() . '_' . rand(1000, 9999) . '.' . $ext;
+                $dest = '../assets/uploads/funcionarios/' . $fname;
+
+                // Garantir que a pasta existe
+                $dir = dirname($dest);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0777, true);
+                }
+
+                if (move_uploaded_file($_FILES['photo']['tmp_name'], $dest)) {
+                    $photo = $fname;
+                } else {
+                    $feedback = "Erro ao mover arquivo de upload.";
+                }
+            } else {
+                $feedback = "Formato de imagem inválido. Use JPG, PNG, GIF ou WEBP.";
+            }
+        } else {
+            $feedback = "Erro no upload: Código " . $_FILES['photo']['error'];
+        }
+    }
 
     if ($action === 'create') {
         // Validação de campos obrigatórios para login
@@ -55,6 +84,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "UPDATE employees SET name=?, role=?, cep=?, street=?, neighborhood=?, city=?, uf=?";
         $params = [$name, $role, $cep, $street, $neighborhood, $city, $uf];
         $types = "sssssss";
+
+        if ($photo) {
+            $sql .= ", photo=?";
+            $params[] = $photo;
+            $types .= "s";
+        }
 
         $sql .= " WHERE id=?";
         $params[] = $id;
@@ -148,15 +183,22 @@ if (isset($_GET['delete'])) {
                     <?php
                     $res = $mysqli->query("SELECT * FROM employees ORDER BY id DESC");
                     while ($f = $res->fetch_assoc()) {
+                        // Lógica de exibição da foto:
+                        $photoVal = $f['photo'];
+                        if ($photoVal && file_exists('../assets/uploads/funcionarios/' . $photoVal)) {
+                            $photoPath = '../assets/uploads/funcionarios/' . $photoVal;
+                            $imgTag = "<img src='$photoPath' style='width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--surface); box-shadow: var(--shadow-sm);'>";
+                        } else {
+                            $imgTag = "<div style='width:64px; height:64px; background:var(--brand-bg); color:var(--brand); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; border:1px solid var(--brand-light);'><i class='ri-user-line'></i></div>";
+                        }
+
                         // Dados para JS
                         $jsonData = htmlspecialchars(json_encode($f), ENT_QUOTES, 'UTF-8');
 
                         echo "
                         <div class='route-card' onclick='editEmployee($jsonData)'>
                             <div style='display:flex; gap:16px; align-items:center;'>
-                                <div style='width:64px; height:64px; background:var(--brand-bg); color:var(--brand); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; border:1px solid var(--brand-light);'>
-                                    <i class='ri-user-line'></i>
-                                </div>
+                                $imgTag
                                 <div>
                                     <div class='route-title' style='margin-bottom:4px; font-size: 1.1rem;'>" . htmlspecialchars($f['name']) . "</div>
                                     <div style='font-size:0.9rem; color:var(--text-light);'>" . htmlspecialchars($f['role']) . "</div>
@@ -181,16 +223,21 @@ if (isset($_GET['delete'])) {
             <div class="modal-bg" id="modal">
                 <div class="modal" onclick="event.stopPropagation()" style="max-height:90vh; overflow-y:auto;">
                     <h2 id="modalTitle" style="margin-bottom: 24px;">Novo Funcionário</h2>
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         <input type="hidden" name="action" id="formAction" value="create">
                         <input type="hidden" name="id" id="empId">
 
-                        <!-- Foto removida -->
+                        <!-- Foto -->
                         <div style="text-align:center; margin-bottom:24px;">
-                            <div
-                                style="width:100px; height:100px; background:var(--brand-bg); color:var(--brand); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px; border:1px solid var(--brand-light); margin: 0 auto;">
+                            <img id="preview" src="" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:4px solid var(--surface); box-shadow: var(--shadow); margin-bottom:16px; display:none;">
+                            <div id="defaultIcon" style="width:100px; height:100px; background:var(--brand-bg); color:var(--brand); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px; border:1px solid var(--brand-light); margin: 0 auto;">
                                 <i class="ri-user-line"></i>
                             </div>
+                            <br>
+                            <label for="photoInput" class="btn secondary" style="display:inline-block; width:auto; padding:8px 16px; font-size:0.875rem; margin-top: 8px;">
+                                Upload Foto
+                            </label>
+                            <input type="file" name="photo" id="photoInput" accept="image/*" style="display:none;" onchange="handleFileUpload(this)">
                         </div>
 
                         <label>Nome Completo</label>
@@ -282,8 +329,20 @@ if (isset($_GET['delete'])) {
                 const empStreet = document.getElementById("empStreet");
                 const empNeighborhood = document.getElementById("empNeighborhood");
 
+                const preview = document.getElementById("preview");
+                const defaultIcon = document.getElementById("defaultIcon");
+                const photoInput = document.getElementById("photoInput");
+
                 const deleteBtnContainer = document.getElementById("deleteBtnContainer");
                 const deleteLink = document.getElementById("deleteLink");
+
+                function handleFileUpload(input) {
+                    if (input.files && input.files[0]) {
+                        preview.src = window.URL.createObjectURL(input.files[0]);
+                        preview.style.display = "block";
+                        defaultIcon.style.display = "none";
+                    }
+                }
 
                 function openCreateModal() {
                     modalTitle.textContent = "Novo Funcionário";
@@ -298,6 +357,12 @@ if (isset($_GET['delete'])) {
                     empUf.value = "";
                     empStreet.value = "";
                     empNeighborhood.value = "";
+
+                    // Resetar foto
+                    preview.src = "";
+                    preview.style.display = "none";
+                    defaultIcon.style.display = "flex";
+                    photoInput.value = "";
 
                     // Mostrar campos de login e tornar obrigatórios
                     loginFields.style.display = "block";
@@ -320,6 +385,18 @@ if (isset($_GET['delete'])) {
                     empUf.value = data.uf || "";
                     empStreet.value = data.street || "";
                     empNeighborhood.value = data.neighborhood || "";
+
+                    // Foto
+                    photoInput.value = "";
+                    if (data.photo) {
+                        preview.src = "../assets/uploads/funcionarios/" + data.photo;
+                        preview.style.display = "block";
+                        defaultIcon.style.display = "none";
+                    } else {
+                        preview.src = "";
+                        preview.style.display = "none";
+                        defaultIcon.style.display = "flex";
+                    }
 
                     // Esconder campos de login e remover obrigatoriedade
                     loginFields.style.display = "none";
