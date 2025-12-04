@@ -79,12 +79,12 @@ CREATE TABLE IF NOT EXISTS chat_messages (
     REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DELETE FROM users WHERE email IN ('admin@vaidetrem.com','cliente@vaidetrem.com');
+DELETE FROM users WHERE email IN ('admin@pagtrem.com','cliente@pagtrem.com');
 INSERT INTO users (name, email, password, role, avatar)
 VALUES
-('Administrador', 'admin@vaidetrem.com',
+('Administrador', 'admin@pagtrem.com',
   '$2y$10$jXMvLkH8bsM1E7e8qcWjj.KVsSXNFxyCG3raoycw2O66OvtlCz9jO', 'admin', NULL),
-('Cliente de Teste', 'cliente@vaidetrem.com',
+('Cliente de Teste', 'cliente@pagtrem.com',
   '$2y$10$jXMvLkH8bsM1E7e8qcWjj.KVsSXNFxyCG3raoycw2O66OvtlCz9jO', 'user', NULL);
 
 INSERT IGNORE INTO stations (name, city, state, cep) VALUES
@@ -129,8 +129,8 @@ INSERT IGNORE INTO notices (title, body, tag) VALUES
  'Sistema');
 
 INSERT IGNORE INTO chat_messages (user_id, message) VALUES
-( (SELECT id FROM users WHERE email='cliente@vaidetrem.com' LIMIT 1), 'Olá, gostaria de informações sobre a rota SP-RJ.' ),
-( (SELECT id FROM users WHERE email='admin@vaidetrem.com' LIMIT 1), 'Mensagem de boas-vindas do administrador.' );
+( (SELECT id FROM users WHERE email='cliente@pagtrem.com' LIMIT 1), 'Olá, gostaria de informações sobre a rota SP-RJ.' ),
+( (SELECT id FROM users WHERE email='admin@pagtrem.com' LIMIT 1), 'Mensagem de boas-vindas do administrador.' );
 
 DROP DATABASE IF EXISTS pagtrem;
 CREATE DATABASE pagtrem CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -205,8 +205,8 @@ CREATE TABLE chat_messages (
 
 
 INSERT INTO users (name,email,password,role) VALUES
-('Administrador','admin@vaidetrem.com','$2y$10$jXMvLkH8bsM1E7e8qcWjj.KVsSXNFxyCG3raoycw2O66OvtlCz9jO','admin'),
-('Cliente de Teste','cliente@vaidetrem.com','$2y$10$jXMvLkH8bsM1E7e8qcWjj.KVsSXNFxyCG3raoycw2O66OvtlCz9jO','user');
+('Administrador','admin@pagtrem.com','$2y$10$jXMvLkH8bsM1E7e8qcWjj.KVsSXNFxyCG3raoycw2O66OvtlCz9jO','admin'),
+('Cliente de Teste','cliente@pagtrem.com','$2y$10$jXMvLkH8bsM1E7e8qcWjj.KVsSXNFxyCG3raoycw2O66OvtlCz9jO','user');
 
 
 CREATE TABLE employees (
