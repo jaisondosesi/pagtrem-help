@@ -1,9 +1,9 @@
-DROP DATABASE IF EXISTS vaidetrem2;
+DROP DATABASE IF EXISTS pagtrem;
 
-CREATE DATABASE IF NOT EXISTS vaidetrem2
+CREATE DATABASE IF NOT EXISTS pagtrem
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
-USE vaidetrem2;
+USE pagtrem;
 
 CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -132,9 +132,9 @@ INSERT IGNORE INTO chat_messages (user_id, message) VALUES
 ( (SELECT id FROM users WHERE email='cliente@vaidetrem.com' LIMIT 1), 'Olá, gostaria de informações sobre a rota SP-RJ.' ),
 ( (SELECT id FROM users WHERE email='admin@vaidetrem.com' LIMIT 1), 'Mensagem de boas-vindas do administrador.' );
 
-DROP DATABASE IF EXISTS vaidetrem2;
-CREATE DATABASE vaidetrem2 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE vaidetrem2;
+DROP DATABASE IF EXISTS pagtrem;
+CREATE DATABASE pagtrem CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE pagtrem;
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
