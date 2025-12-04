@@ -2,19 +2,6 @@
 require_once('../assets/config/auth.php');
 require_once('../assets/config/db.php');
 
-// Helper para formatar duração
-function formatDuration($minutes)
-{
-    if (!$minutes)
-        return '0min';
-    $hours = floor($minutes / 60);
-    $mins = $minutes % 60;
-    if ($hours > 0) {
-        return "{$hours}h {$mins}min";
-    }
-    return "{$mins}min";
-}
-
 // PROCESSAR FORMULÁRIO
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
@@ -24,11 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $origin = trim($_POST['origin'] ?? '');
     $destination = trim($_POST['destination'] ?? '');
 
-    // Duração agora vem em horas e minutos
-    $hours = (int) ($_POST['duration_hours'] ?? 0);
-    $minutes = (int) ($_POST['duration_minutes'] ?? 0);
-    $duration_minutes = ($hours * 60) + $minutes;
-
     // Nome da rota é composto
     $name = "$origin → $destination";
 
@@ -36,12 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = $_POST['status'] ?? 'ativa';
 
     if ($action === 'create') {
-        $stmt = $mysqli->prepare("INSERT INTO routes (name, origin, destination, duration_minutes, extra_info, status) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('ssssss', $name, $origin, $destination, $duration_minutes, $extra_info, $status);
+        $stmt = $mysqli->prepare("INSERT INTO routes (name, origin, destination, extra_info, status) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param('sssss', $name, $origin, $destination, $extra_info, $status);
         $stmt->execute();
     } elseif ($action === 'update' && $id) {
-        $stmt = $mysqli->prepare("UPDATE routes SET name=?, origin=?, destination=?, duration_minutes=?, extra_info=?, status=? WHERE id=?");
-        $stmt->bind_param('ssssisi', $name, $origin, $destination, $duration_minutes, $extra_info, $status, $id);
+        $stmt = $mysqli->prepare("UPDATE routes SET name=?, origin=?, destination=?, extra_info=?, status=? WHERE id=?");
+        $stmt->bind_param('sssssi', $name, $origin, $destination, $extra_info, $status, $id);
         $stmt->execute();
     } elseif ($action === 'delete' && $id) {
         $stmt = $mysqli->prepare("DELETE FROM routes WHERE id=?");
@@ -95,7 +77,7 @@ if (isset($_GET['delete'])) {
                     while ($r = $res->fetch_assoc()) {
                         $badgeClass = ($r['status'] === 'manutencao') ? 'red' : 'blue';
                         $badgeText = ($r['status'] === 'manutencao') ? 'Manutenção' : 'Ativa';
-                        $durationFmt = formatDuration($r['duration_minutes']);
+
 
                         // Prepara dados para o JS
                         $jsonData = htmlspecialchars(json_encode($r), ENT_QUOTES, 'UTF-8');
@@ -105,13 +87,6 @@ if (isset($_GET['delete'])) {
                             <div class='route-title'>
                                 <span>" . htmlspecialchars($r['name']) . "</span>
                                 <span class='badge $badgeClass'>$badgeText</span>
-                            </div>
-
-                            <div class='details'>
-                                <div style='display:flex; align-items:center; gap:8px;'>
-                                    <i class='ri-time-line' style='color:var(--brand);'></i>
-                                    <span>$durationFmt</span>
-                                </div>
                             </div>
 
                             <div class='live-info'>
@@ -151,20 +126,6 @@ if (isset($_GET['delete'])) {
                             </div>
                         </div>
 
-                        <label>Duração</label>
-                        <div style="display:flex; gap:12px; align-items:center;">
-                            <div style="flex:1;">
-                                <input type="number" class="input" name="duration_hours" id="routeHours"
-                                    placeholder="Horas" min="0" required>
-                            </div>
-                            <span style="font-weight:600; color:var(--text-light);">h</span>
-                            <div style="flex:1;">
-                                <input type="number" class="input" name="duration_minutes" id="routeMinutes"
-                                    placeholder="Minutos" min="0" max="59" required>
-                            </div>
-                            <span style="font-weight:600; color:var(--text-light);">min</span>
-                        </div>
-
                         <label>Status</label>
                         <select class="select" name="status" id="routeStatus">
                             <option value="ativa">Ativa</option>
@@ -198,9 +159,6 @@ if (isset($_GET['delete'])) {
                 const routeOrigin = document.getElementById("routeOrigin");
                 const routeDestination = document.getElementById("routeDestination");
 
-                const routeHours = document.getElementById("routeHours");
-                const routeMinutes = document.getElementById("routeMinutes");
-
                 const routeStatus = document.getElementById("routeStatus");
                 const routeExtra = document.getElementById("routeExtra");
                 const deleteBtnContainer = document.getElementById("deleteBtnContainer");
@@ -213,9 +171,6 @@ if (isset($_GET['delete'])) {
 
                     routeOrigin.value = "";
                     routeDestination.value = "";
-
-                    routeHours.value = "";
-                    routeMinutes.value = "";
 
                     routeStatus.value = "ativa";
                     routeExtra.value = "";
@@ -243,14 +198,6 @@ if (isset($_GET['delete'])) {
                             routeDestination.value = "";
                         }
                     }
-
-                    // Converter minutos para horas e minutos
-                    let totalMin = parseInt(data.duration_minutes) || 0;
-                    let h = Math.floor(totalMin / 60);
-                    let m = totalMin % 60;
-
-                    routeHours.value = h;
-                    routeMinutes.value = m;
 
                     routeStatus.value = data.status;
                     routeExtra.value = data.extra_info || "";
